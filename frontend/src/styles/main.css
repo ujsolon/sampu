@@ -28,3 +28,36 @@ nav span {
 .game-label {
     color: red;
 }
+
+
+/* Add to your existing CSS */
+.games-screen {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+.date-sections {
+    display: flex;
+    justify-content: space-between;
+}
+
+.game-card {
+    border: 1px solid black;
+    padding: 10px;
+    margin-bottom: 10px;
+}
+
+.game-label {
+    color: red;
+}
+
+/* Style for the navigation links */
+nav a {
+    margin-left: 20px;
+    text-decoration: none;
+    color: black;
+}
+
+nav a:hover {
+    text-decoration: underline;
+}
