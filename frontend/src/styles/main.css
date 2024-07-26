@@ -1,0 +1,30 @@
+.sampu-app {
+    max-width: 800px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
+}
+
+header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+nav span {
+    margin-left: 20px;
+}
+
+.court-list {
+    display: flex;
+    justify-content: space-between;
+}
+
+.court-card {
+    border: 1px solid black;
+    padding: 10px;
+    width: 30%;
+}
+
+.game-label {
+    color: red;
+}
