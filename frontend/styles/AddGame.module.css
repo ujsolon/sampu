@@ -1,0 +1,27 @@
+/* AddGame.module.css */
+
+.formContainer form {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+}
+
+.formContainer input,
+.formContainer select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+.formContainer button {
+    padding: 8px 16px;
+    background-color: #0070f3;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+.formContainer button:hover {
+    background-color: #005bb5;
+}

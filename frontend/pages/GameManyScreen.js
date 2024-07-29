@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import supabase from '../utils/supabase';
-import GameCard from '../components/GameCard'; // Make sure this path is correct
-import styles from '../styles/GameManyScreen.module.css'; // Import the CSS Module
+import GameCard from '../components/GameCard';
+import styles from '../styles/GameManyScreen.module.css';
+import Link from 'next/link';
 
 export default function GameManyScreen() {
     const [games, setGames] = useState([]);
@@ -22,9 +23,10 @@ export default function GameManyScreen() {
     return (
         <div className={styles.gameScreen}>
             <h1 className={styles.screenH2}>Games</h1>
+            <Link href="/add-game" className={styles.addButton}>Add Game</Link>
             <div className={styles.gameList}>
                 {games.map(game => (
-                    <GameCard key={game.id} game={game} />
+                    <GameCard key={game.id} game={game} className={styles.gameCard} />
                 ))}
             </div>
         </div>

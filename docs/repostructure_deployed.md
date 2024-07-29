@@ -36,25 +36,34 @@ sampu/
 │   │   ├── initial_data.py
 │   │   └── requirements.txt
 ├── frontend/
-│   ├── src/
-│   │   ├── components/
-│   │   │   ├── CourtCard.js
-│   │   │   ├── PlayerCard.js
-│   │   │   ├── GameCard.js
-│   │   ├── screens/
-│   │   │   ├── HomeScreen.js
-│   │   │   ├── CourtManyScreen.js
-│   │   │   ├── GameManyScreen.js
-│   │   │   ├── PlayerOneScreen.js
-│   │   ├── App.js
+│   ├── components/
+│   │   ├── CourtCard.js
+│   │   ├── PlayerCard.js
+│   │   ├── GameCard.js
+│   ├── pages/
+│   │   ├── _app.js
+│   │   ├── HomeScreen.js
+│   │   ├── CourtManyScreen.js
+│   │   ├── GameManyScreen.js
 │   │   ├── index.js
-│   │   └── styles/
-│   │       └── main.css
+│   │   ├── PlayerOneScreen.js
 │   ├── public/
 │   │   ├── index.html
+│   ├── styles/
+│   │   ├── CourtCard.module.css
+│   │   ├── CourtManyScreen.module.css
+│   │   ├── GameCard.module.css
+│   │   ├── GameManyScreen.module.css
+│   │   ├── HomeScreen.module.css
+│   │   ├── PlayerCard.module.css
+│   │   ├── PlayerOneScreen.module.css
 │   ├── utils/
 │   │   ├── supabase.js
-│   └── package.json
+│   ├── package.json
+│   └── vercel.json
+├── sql/
+│   ├── create_tables.sql
+│   ├── initialize_tables.sql
 ├── .gitignore
 ├── README.md
 └── LICENSE

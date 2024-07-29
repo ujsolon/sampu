@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react';
 import supabase from '../utils/supabase';
 import PlayerCard from '../components/PlayerCard';
-import '../styles/PlayerOneScreen.module.css';
+import styles from '../styles/PlayerOneScreen.module.css';
+import Link from 'next/link';
 
 export default function PlayerOneScreen() {
     const [player, setPlayer] = useState(null);
@@ -17,6 +18,7 @@ export default function PlayerOneScreen() {
             .select('*')
             .eq('id', playerId)
             .single();
+
         if (error) console.error('Error fetching player:', error);
         else setPlayer(data);
     }
@@ -24,9 +26,10 @@ export default function PlayerOneScreen() {
     if (!player) return <div>Loading...</div>;
 
     return (
-        <div>
-            <h1>Player Profile</h1>
-            <PlayerCard player={player} />
+        <div className={styles.playerScreen}>
+            <h1 className={styles.screenH2}>Player Profile</h1>
+            <Link href="/add-player" className={styles.addButton}>Add Player</Link>
+            <PlayerCard player={player} className={styles.playerCard} />
         </div>
     );
 }
