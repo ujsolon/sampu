@@ -1,24 +1,36 @@
-import React from 'react';
-import GameCard from '../components/GameCard';
+import React, { useEffect, useState } from 'react'
+import supabase from '../utils/supabase'
+import GameCard from '../components/GameCard'
 import '../styles/GameManyScreen.css';
 
 function GameManyScreen() {
-    const games = [
-        { courtName: 'Court 1', time: '14:00', createdBy: 'John Doe', status: 'Scheduled' },
-        { courtName: 'Court 2', time: '16:00', createdBy: 'Jane Smith', status: 'In Progress' },
-        { courtName: 'Court 3', time: '18:00', createdBy: 'Jim Brown', status: 'Completed' }
-    ];
+    const [games, setGames] = useState([])
+
+    useEffect(() => {
+        fetchGames()
+    }, [])
+
+    async function fetchGames() {
+        const { data, error } = await supabase
+            .from('games')
+            .select(`
+        *,
+        court:courts(name),
+        creator:players(name)
+      `)
+
+        if (error) console.log('error', error)
+        else setGames(data)
+    }
 
     return (
-        <div className="screen games-screen">
-            <h2>Games</h2>
-            <div className="container">
-                {games.map((game, index) => (
-                    <GameCard key={index} {...game} />
-                ))}
-            </div>
+        <div>
+            <h1>Games</h1>
+            {games.map(game => (
+                <GameCard key={game.id} game={game} />
+            ))}
         </div>
-    );
+    )
 }
 
-export default GameManyScreen;
+export default GameManyScreen

@@ -297,3 +297,10 @@ dist
 .yarn/build-state.yml
 .yarn/install-state.gz
 .pnp.*
+
+# Ignore Word documents
+*.doc
+*.docx
+
+#ignore code-workspace
+sampu.code-workspace
