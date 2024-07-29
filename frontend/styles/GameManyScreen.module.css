@@ -1,17 +1,16 @@
-/* CourtManyScreen.css */
-.courts-screen {
+.gameScreen {
     padding: 32px;
     background-color: #f4f4f4;
 }
 
-.court-list {
+.gameList {
     display: flex;
     flex-wrap: wrap;
     justify-content: space-around;
     gap: 16px;
 }
 
-.court-card {
+.gameCard {
     width: 300px;
     border: 1px solid #ddd;
     border-radius: 8px;
@@ -20,15 +19,15 @@
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-.court-card h3 {
+.gameCard h3 {
     margin-top: 0;
 }
 
-.court-card p {
+.gameCard p {
     margin: 8px 0;
 }
 
-.screen h2 {
+.screenH2 {
     font-size: 24px;
     margin-bottom: 32px;
 }
