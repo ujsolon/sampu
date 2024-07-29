@@ -1,0 +1,14 @@
+/* PlayerCard.css */
+.player-card {
+    max-width: 300px;
+}
+
+/* GameCard.css */
+.game-card {
+    max-width: 300px;
+}
+
+/* CourtCard.css */
+.court-card {
+    max-width: 300px;
+}

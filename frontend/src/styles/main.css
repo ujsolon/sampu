@@ -1,63 +1,33 @@
-.sampu-app {
-    max-width: 800px;
-    margin: 0 auto;
-    font-family: Arial, sans-serif;
+/* styles.css */
+.card {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    margin: 16px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background-color: #fff;
 }
 
-header {
+.card h3 {
+    margin-top: 0;
+}
+
+.card p {
+    margin: 8px 0;
+}
+
+.container {
     display: flex;
-    justify-content: space-between;
-    align-items: center;
+    flex-wrap: wrap;
+    justify-content: space-around;
 }
 
-nav span {
-    margin-left: 20px;
+.screen {
+    padding: 32px;
+    text-align: center;
 }
 
-.court-list {
-    display: flex;
-    justify-content: space-between;
-}
-
-.court-card {
-    border: 1px solid black;
-    padding: 10px;
-    width: 30%;
-}
-
-.game-label {
-    color: red;
-}
-
-
-/* Add to your existing CSS */
-.games-screen {
-    max-width: 800px;
-    margin: 0 auto;
-}
-
-.date-sections {
-    display: flex;
-    justify-content: space-between;
-}
-
-.game-card {
-    border: 1px solid black;
-    padding: 10px;
-    margin-bottom: 10px;
-}
-
-.game-label {
-    color: red;
-}
-
-/* Style for the navigation links */
-nav a {
-    margin-left: 20px;
-    text-decoration: none;
-    color: black;
-}
-
-nav a:hover {
-    text-decoration: underline;
+.screen h2 {
+    font-size: 24px;
+    margin-bottom: 32px;
 }

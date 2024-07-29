@@ -1,12 +1,14 @@
 import React from 'react';
+import '../styles/CourtCard.css';
 
-function CourtCard({ courtNumber, nextGame, players, maxPlayers, hasGame }) {
+function CourtCard({ name, location, ownerName, status, createdAt }) {
     return (
-        <div className="court-card">
-            <h3>Court{courtNumber}</h3>
-            {hasGame && <p className="game-label">GAME</p>}
-            <p>Next game: {nextGame}</p>
-            <p>Players: {players} ({maxPlayers})</p>
+        <div className="card court-card">
+            <h3>{name}</h3>
+            <p>Location: {location}</p>
+            <p>Owner: {ownerName}</p>
+            <p>Status: {status}</p>
+            <p>Created: {new Date(createdAt).toLocaleDateString()}</p>
         </div>
     );
 }

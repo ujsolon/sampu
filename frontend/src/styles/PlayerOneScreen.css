@@ -1,0 +1,27 @@
+/* PlayerOneScreen.css */
+.player-info-screen {
+    padding: 32px;
+    background-color: #eaeaea;
+}
+
+.player-card {
+    max-width: 400px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #fff;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.player-card h3 {
+    margin-top: 0;
+}
+
+.player-card p {
+    margin: 8px 0;
+}
+
+.screen h2 {
+    font-size: 24px;
+    margin-bottom: 32px;
+}
