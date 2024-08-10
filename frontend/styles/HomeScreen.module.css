@@ -28,3 +28,12 @@
 .navLink:hover {
     background-color: #0056b3;
 }
+
+.signOutButton {
+    padding: 10px;
+    background-color: #f44336;
+    color: white;
+    border: none;
+    cursor: pointer;
+    margin-bottom: 20px;
+}

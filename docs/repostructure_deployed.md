@@ -42,6 +42,9 @@ sampu/
 │   │   ├── GameCard.js
 │   ├── pages/
 │   │   ├── _app.js
+│   │   ├── add-court.js
+│   │   ├── add-game.js
+│   │   ├── add-player.js
 │   │   ├── HomeScreen.js
 │   │   ├── CourtManyScreen.js
 │   │   ├── GameManyScreen.js
@@ -50,15 +53,20 @@ sampu/
 │   ├── public/
 │   │   ├── index.html
 │   ├── styles/
+│   │   ├── AddCourt.module.css
+│   │   ├── AddGame.module.css
+│   │   ├── AddPlayer.module.css
 │   │   ├── CourtCard.module.css
 │   │   ├── CourtManyScreen.module.css
 │   │   ├── GameCard.module.css
 │   │   ├── GameManyScreen.module.css
+│   │   ├── global.css
 │   │   ├── HomeScreen.module.css
 │   │   ├── PlayerCard.module.css
 │   │   ├── PlayerOneScreen.module.css
 │   ├── utils/
 │   │   ├── supabase.js
+│   │   ├── auth.js
 │   ├── package.json
 │   └── vercel.json
 ├── sql/
