@@ -1,49 +1,38 @@
-.gamesScreen {
-    padding: 32px;
-    background-color: #f4f4f4;
-}
-
-.gameList {
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: space-around;
-    gap: 16px;
-}
-
-.gameCard {
-    width: 300px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    padding: 16px;
-    background-color: #fff;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.gameCard h3 {
-    margin-top: 0;
-}
-
-.gameCard p {
-    margin: 8px 0;
+.gameScreen {
+    padding: 20px;
 }
 
 .screenH2 {
     font-size: 24px;
-    margin-bottom: 32px;
+    margin-bottom: 20px;
 }
 
 .addButton {
-    display: inline-block;
     margin-bottom: 20px;
+    display: inline-block;
     padding: 10px 20px;
-    font-size: 18px;
+    background-color: #0070f3;
+    color: white;
     text-decoration: none;
-    color: #ffffff;
-    background-color: #007bff;
     border-radius: 5px;
     transition: background-color 0.3s;
 }
 
 .addButton:hover {
-    background-color: #0056b3;
+    background-color: #005bb5;
+}
+
+.gameList {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: flex-start;
+    /* Aligns cards to the left */
+}
+
+.gameCard {
+    width: 100%;
+    /* Adjust based on your design */
+    max-width: 300px;
+    flex-grow: 1;
 }

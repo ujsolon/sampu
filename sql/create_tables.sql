@@ -24,6 +24,7 @@ CREATE TABLE courts (
 CREATE TABLE games (
   id SERIAL NOT NULL PRIMARY KEY,
   court_id INTEGER REFERENCES courts (id),
+  date DATE NOT NULL,
   time TIME NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
   created_by INTEGER REFERENCES players (id),

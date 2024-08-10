@@ -14,11 +14,11 @@ VALUES
 (4, 'Court 4', '101 Maple St', NULL, 'closed');
 
 -- Insert sample data into games table
-INSERT INTO games (id, court_id, time, created_by, status)
+INSERT INTO games (court_id, date, time, created_by, status)
 VALUES
-(1, 1, '15:00:00', 1, 'open'),
-(2, 1, '16:00:00', 1, 'in_progress'),
-(3, 2, '17:00:00', 2, 'finished');
+(1, 1, '2023-06-18', '15:00:00', 1, 'open'),
+(2, 1, '2023-06-19', '16:00:00', 1, 'in_progress'),
+(3, 2, '2023-06-20', '17:00:00', 2, 'finished');
 
 -- Insert sample data into games_players table
 INSERT INTO games_players (id, game_id, player_id, team)

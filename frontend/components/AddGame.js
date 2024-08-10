@@ -5,46 +5,64 @@ import styles from '../styles/AddGame.module.css';
 
 export default function AddGame() {
     const [courtId, setCourtId] = useState('');
+    const [date, setDate] = useState('');
     const [time, setTime] = useState('');
     const [status, setStatus] = useState('open');
     const [player, setPlayer] = useState(null);
+    const [courts, setCourts] = useState([]);
+    const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
     const router = useRouter();
 
     useEffect(() => {
-        const fetchPlayer = async () => {
+        const fetchPlayerAndCourts = async () => {
             const { data: { user } } = await supabase.auth.getUser();
             if (!user) {
-                router.push('/login'); // Redirect to login if not authenticated
+                router.push('/login');
+                return;
+            }
+
+            const { data: playerData, error: playerError } = await supabase
+                .from('players')
+                .select('*')
+                .eq('email', user.email)
+                .single();
+
+            if (playerError) {
+                console.error('Error fetching player:', playerError);
+                setError('Error fetching player data');
+                return;
+            }
+
+            if (playerData) {
+                setPlayer(playerData);
             } else {
-                // Fetch the player data from your players table
-                const { data, error } = await supabase
-                    .from('players')
-                    .select('*')
-                    .eq('email', user.email)
-                    .single();
+                setError('Player not found');
+                return;
+            }
 
-                if (error) {
-                    console.error('Error fetching player:', error);
-                    return;
-                }
+            const { data: courtsData, error: courtsError } = await supabase
+                .from('courts')
+                .select('id, name');
 
-                if (data) {
-                    setPlayer(data);
-                } else {
-                    console.error('Player not found');
-                    // Handle case where auth user exists but player record doesn't
-                }
+            if (courtsError) {
+                console.error('Error fetching courts:', courtsError);
+                setError('Error fetching courts data');
+            } else {
+                setCourts(courtsData);
             }
         };
 
-        fetchPlayer();
+        fetchPlayerAndCourts();
     }, []);
 
     async function handleSubmit(event) {
         event.preventDefault();
+        setError('');
+        setSuccess('');
 
         if (!player) {
-            console.error('Player not authenticated');
+            setError('Player not authenticated');
             return;
         }
 
@@ -52,33 +70,45 @@ export default function AddGame() {
             .from('games')
             .insert([{
                 court_id: courtId,
+                date,
                 time,
                 status,
-                created_by: player.id // Use the player's id from your players table
+                created_by: player.id
             }]);
 
         if (error) {
             console.error('Error adding game:', error);
+            setError('Failed to add game. Please try again.');
         } else {
-            console.log('Game added:', data);
-            router.push('/GameManyScreen'); // Redirect to game list after adding
+            setSuccess('Game added successfully!');
+            setTimeout(() => router.push('/GameManyScreen'), 2000);
         }
     }
 
     if (!player) {
-        return <div>Loading...</div>; // Or any loading indicator
+        return <div>Loading...</div>;
     }
 
     return (
         <div className={styles.formContainer}>
             <h1>Add Game</h1>
+            {error && <p className={styles.error}>{error}</p>}
+            {success && <p className={styles.success}>{success}</p>}
             <form onSubmit={handleSubmit}>
-                {/* Example form inputs */}
-                <input
-                    type="text"
+                <select
                     value={courtId}
                     onChange={(e) => setCourtId(e.target.value)}
-                    placeholder="Court ID"
+                    required
+                >
+                    <option value="">Select a court</option>
+                    {courts.map(court => (
+                        <option key={court.id} value={court.id}>{court.name}</option>
+                    ))}
+                </select>
+                <input
+                    type="date"
+                    value={date}
+                    onChange={(e) => setDate(e.target.value)}
                     required
                 />
                 <input
@@ -87,6 +117,16 @@ export default function AddGame() {
                     onChange={(e) => setTime(e.target.value)}
                     required
                 />
+                <select
+                    value={status}
+                    onChange={(e) => setStatus(e.target.value)}
+                    required
+                >
+                    <option value="open">Open</option>
+                    <option value="in_progress">In Progress</option>
+                    <option value="finished">Finished</option>
+                    <option value="cancelled">Cancelled</option>
+                </select>
                 <button type="submit">Add Game</button>
             </form>
         </div>
