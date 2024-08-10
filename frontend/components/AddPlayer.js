@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import supabase from '../utils/supabase';
+import { supabase } from '../utils/supabase';
 import styles from '../styles/AddPlayer.module.css';
 
 export default function AddPlayer() {
