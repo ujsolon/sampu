@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import supabase from '../utils/supabase';
+import { supabase } from '../utils/supabase'
 import CourtCard from '../components/CourtCard';
 import styles from '../styles/CourtManyScreen.module.css';
 import Link from 'next/link';

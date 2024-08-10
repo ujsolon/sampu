@@ -1,5 +1,5 @@
 import { useEffect, useState } from 'react';
-import supabase from '../utils/supabase';
+import { supabase } from '../utils/supabase'
 import GameCard from '../components/GameCard';
 import styles from '../styles/GameManyScreen.module.css';
 import Link from 'next/link';
