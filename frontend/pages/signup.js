@@ -8,6 +8,7 @@ export default function SignupPage() {
     const [email, setEmail] = useState('');
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
+    const [name, setName] = useState('');
     const [error, setError] = useState(null);
     const router = useRouter();
 
@@ -21,7 +22,7 @@ export default function SignupPage() {
         }
 
         try {
-            const { user, session } = await signUp(email, password);
+            const { user, session } = await signUp(email, password, name);
             if (user) {
                 router.push('/');  // Redirect to home page after successful signup
             }
@@ -35,6 +36,13 @@ export default function SignupPage() {
             <h1>Sign Up</h1>
             {error && <p className={styles.error}>{error}</p>}
             <form onSubmit={handleSubmit} className={styles.form}>
+                <input
+                    type="text"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    placeholder="Name"
+                    required
+                />
                 <input
                     type="email"
                     value={email}

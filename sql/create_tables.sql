@@ -5,6 +5,7 @@ CREATE TABLE players (
   email TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
   status TEXT NOT NULL,
+    user_id UUID UNIQUE NOT NULL,
   CONSTRAINT check_player_status CHECK (status IN ('active', 'locked'))
 );
 
