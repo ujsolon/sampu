@@ -37,10 +37,17 @@ sampu/
 │   │   └── requirements.txt
 ├── frontend/
 │   ├── components/
+│   │   ├── AddCourt.js
+│   │   ├── AddGame.js
+│   │   ├── AddPlayer.js
 │   │   ├── CourtCard.js
-│   │   ├── PlayerCard.js
 │   │   ├── GameCard.js
+│   │   ├── PlayerCard.js
+│   │   ├── GameOneScreen.js
 │   ├── pages/
+│   │   ├── game/
+│   │   │   ├── [id].js
+│   │   │   ├── index.js
 │   │   ├── _app.js
 │   │   ├── add-court.js
 │   │   ├── add-game.js

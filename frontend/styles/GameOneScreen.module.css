@@ -1,0 +1,33 @@
+.gameContainer {
+    max-width: 600px;
+    margin: 0 auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.gameContainer h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+}
+
+.gameContainer p {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.gameContainer button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 16px;
+    color: #fff;
+    background-color: #0070f3;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.gameContainer button:hover {
+    background-color: #005bb5;
+}
