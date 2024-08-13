@@ -2,22 +2,35 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
 import styles from '../styles/GameOneScreen.module.css';
 
-function TeamBox({ players, team, onRegister, onUnregister, playerRegistered }) {
-    const outlineClass = team === 'team_1' ? styles.outlineRed : styles.outlineBlue;
-    const grayedOut = playerRegistered && playerRegistered !== team;
+function TeamBox({ players, team, onRegister, onUnregister, playerRegistered, isClickable }) {
+    const teamClass = team === 'team_1' ? styles.team1 : styles.team2;
 
     return (
         <div
-            className={`${styles.teamBox} ${grayedOut ? styles.grayedOut : ''}`}
-            onClick={() => !playerRegistered && onRegister(team)}
+            className={`${styles.teamBox} ${teamClass} ${playerRegistered && playerRegistered !== team ? styles.grayedOut : ''} ${!isClickable ? styles.nonClickableTeam : ''}`}
+            onClick={() => isClickable && !playerRegistered && onRegister(team)}
         >
-            {players.map((player, index) => (
-                <div key={index} className={outlineClass}>
-                    <div className={styles.tooltip}>{player.name}</div>
+            {players.map((player) => (
+                <div key={player.id} className={styles.playerAvatarWrapper}>
+                    <div className={styles.playerAvatar}>
+                        {player.avatar_base64 ? (
+                            <img
+                                src={`data:image/jpeg;base64,${player.avatar_base64}`}
+                                alt={player.name}
+                                className={styles.avatarImage}
+                            />
+                        ) : (
+                            <div className={styles.defaultAvatar}>{player.name[0]}</div>
+                        )}
+                    </div>
+                    <span className={styles.tooltip}>{player.name}</span>
                 </div>
             ))}
             {playerRegistered === team && (
-                <button className={styles.unregisterButton} onClick={onUnregister}>
+                <button className={styles.unregisterButton} onClick={(e) => {
+                    e.stopPropagation();
+                    onUnregister();
+                }}>
                     &times;
                 </button>
             )}
@@ -31,9 +44,14 @@ const GameOneScreen = ({ gameId }) => {
     const [currentPlayer, setCurrentPlayer] = useState(null);
 
     useEffect(() => {
-        fetchGameDetails();
         fetchCurrentPlayer();
     }, [gameId]);
+
+    useEffect(() => {
+        if (currentPlayer) {
+            fetchGameDetails();
+        }
+    }, [currentPlayer]);
 
     async function fetchCurrentPlayer() {
         const { data: { user } } = await supabase.auth.getUser();
@@ -57,7 +75,7 @@ const GameOneScreen = ({ gameId }) => {
                 games_players!game_players_game_id_fkey(
                     player_id,
                     team,
-                    players!game_players_player_id_fkey(name)
+                    players!game_players_player_id_fkey(id, name, avatar_base64)
                 ),
                 courts(name)
             `)
@@ -68,10 +86,8 @@ const GameOneScreen = ({ gameId }) => {
         else {
             setGameDetails(data);
             // Check if the current player is registered
-            if (currentPlayer) {
-                const playerRegistration = data.games_players.find(p => p.player_id === currentPlayer.id);
-                setPlayerRegistered(playerRegistration ? playerRegistration.team : null);
-            }
+            const playerRegistration = data.games_players.find(p => p.player_id === currentPlayer.id);
+            setPlayerRegistered(playerRegistration ? playerRegistration.team : null);
         }
     }
 
@@ -130,6 +146,7 @@ const GameOneScreen = ({ gameId }) => {
                     onRegister={handleRegister}
                     onUnregister={handleUnregister}
                     playerRegistered={playerRegistered}
+                    isClickable={!playerRegistered || playerRegistered === 'team_1'}
                 />
                 <TeamBox
                     players={team2Players.map(p => p.players)}
@@ -137,6 +154,7 @@ const GameOneScreen = ({ gameId }) => {
                     onRegister={handleRegister}
                     onUnregister={handleUnregister}
                     playerRegistered={playerRegistered}
+                    isClickable={!playerRegistered || playerRegistered === 'team_2'}
                 />
             </div>
         </div>

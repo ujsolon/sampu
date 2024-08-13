@@ -28,7 +28,11 @@
     border-radius: 8px;
     position: relative;
     background-color: #f9f9f9;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, opacity 0.3s ease;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: flex-start;
+    align-content: flex-start;
 }
 
 .teamBox:hover {
@@ -44,6 +48,9 @@
 
 .outlineRed,
 .outlineBlue {
+    pointer-events: auto;
+    /* This allows the hover effect even in a non-clickable parent */
+    /* ... rest of the existing styles ... */
     width: 40px;
     height: 40px;
     border-radius: 50%;
@@ -124,7 +131,6 @@
 
 .grayedOut {
     opacity: 0.5;
-    pointer-events: none;
 }
 
 /* Responsive design */
@@ -137,4 +143,173 @@
         width: 100%;
         margin-bottom: 20px;
     }
+}
+
+.teamBox .outlineRed,
+.teamBox .outlineBlue {
+    display: inline-flex;
+    margin: 5px;
+}
+
+.outlineRed .tooltip,
+.outlineBlue .tooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+    pointer-events: none;
+}
+
+.grayedOut {
+    opacity: 0.5;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+.teamBox:not(.grayedOut):hover {
+    cursor: pointer;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+.nonClickableTeam {
+    pointer-events: none;
+}
+
+.playerAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    position: relative;
+    margin: 5px;
+    cursor: pointer;
+}
+
+.avatarImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.defaultAvatar {
+    width: 100%;
+    height: 100%;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #fff;
+}
+
+.tooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+    pointer-events: none;
+}
+
+.playerAvatar:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* You may want to adjust these styles */
+.team1 {
+    background-color: rgba(255, 0, 0, 0.1);
+}
+
+.team2 {
+    background-color: rgba(0, 0, 255, 0.1);
+}
+
+.playerAvatarWrapper {
+    position: relative;
+    display: inline-block;
+    margin: 5px;
+    z-index: 2;
+    /* Ensure it's above other elements */
+}
+
+.playerAvatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    overflow: hidden;
+    cursor: pointer;
+}
+
+.avatarImage {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+.defaultAvatar {
+    width: 100%;
+    height: 100%;
+    background-color: #ccc;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: bold;
+    color: #fff;
+}
+
+.tooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: rgba(0, 0, 0, 0.8);
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 3;
+    /* Ensure it's above other elements */
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s, visibility 0.3s;
+}
+
+.playerAvatarWrapper:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+/* Override pointer-events for player avatars in grayed out teams */
+.grayedOut .playerAvatarWrapper {
+    pointer-events: auto;
+}
+
+.grayedOut .playerAvatar {
+    cursor: default;
+}
+
+/* Ensure the tooltip is always clickable */
+.tooltip {
+    pointer-events: auto;
 }
