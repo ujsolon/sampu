@@ -5,7 +5,8 @@ CREATE TABLE players (
   email TEXT NOT NULL,
   created_at TIMESTAMP DEFAULT NOW(),
   status TEXT NOT NULL,
-    user_id UUID UNIQUE NOT NULL,
+  user_id UUID UNIQUE NOT NULL,
+  avatar_base64 TEXT;
   CONSTRAINT check_player_status CHECK (status IN ('active', 'locked'))
 );
 
@@ -39,4 +40,5 @@ CREATE TABLE games_players (
   player_id INTEGER REFERENCES players (id),
   team TEXT,
   CONSTRAINT check_team CHECK (team IN ('team_1', 'team_2', 'substitute'))
+  CONSTRAINT unique_game_player UNIQUE (game_id, player_id);
 );

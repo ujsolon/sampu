@@ -1,33 +1,140 @@
-.gameContainer {
-    max-width: 600px;
+.gameScreen {
+    max-width: 800px;
     margin: 0 auto;
     padding: 20px;
-    background-color: #f9f9f9;
+    font-family: Arial, sans-serif;
+}
+
+.gameScreen h2 {
+    color: #333;
+    margin-bottom: 10px;
+}
+
+.gameScreen p {
+    color: #666;
+    margin-bottom: 5px;
+}
+
+.teamsContainer {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.teamBox {
+    width: 45%;
+    padding: 15px;
+    border: 1px solid #ccc;
     border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    position: relative;
+    background-color: #f9f9f9;
+    transition: background-color 0.3s ease;
 }
 
-.gameContainer h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
+.teamBox:hover {
+    background-color: #f0f0f0;
 }
 
-.gameContainer p {
-    font-size: 18px;
-    margin: 10px 0;
+.playerOutlines {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
 }
 
-.gameContainer button {
-    display: inline-block;
-    padding: 10px 20px;
-    font-size: 16px;
-    color: #fff;
-    background-color: #0070f3;
-    border: none;
-    border-radius: 5px;
+.outlineRed,
+.outlineBlue {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-weight: bold;
+    transition: transform 0.2s ease;
+}
+
+.outlineRed {
+    background-color: #ff4d4d;
+}
+
+.outlineBlue {
+    background-color: #4d4dff;
+}
+
+.outlineRed:hover,
+.outlineBlue:hover {
     cursor: pointer;
+    transform: scale(1.1);
 }
 
-.gameContainer button:hover {
-    background-color: #005bb5;
+.outlineRed .tooltip,
+.outlineBlue .tooltip {
+    visibility: hidden;
+    width: 120px;
+    background-color: #555;
+    color: #fff;
+    text-align: center;
+    border-radius: 6px;
+    padding: 5px 0;
+    position: absolute;
+    z-index: 1;
+    bottom: 125%;
+    left: 50%;
+    margin-left: -60px;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+
+.outlineRed .tooltip::after,
+.outlineBlue .tooltip::after {
+    content: "";
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    margin-left: -5px;
+    border-width: 5px;
+    border-style: solid;
+    border-color: #555 transparent transparent transparent;
+}
+
+.outlineRed:hover .tooltip,
+.outlineBlue:hover .tooltip {
+    visibility: visible;
+    opacity: 1;
+}
+
+.unregisterButton {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background-color: transparent;
+    border: none;
+    color: #999;
+    font-size: 20px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.unregisterButton:hover {
+    color: #ff4d4d;
+}
+
+.grayedOut {
+    opacity: 0.5;
+    pointer-events: none;
+}
+
+/* Responsive design */
+@media (max-width: 600px) {
+    .teamsContainer {
+        flex-direction: column;
+    }
+
+    .teamBox {
+        width: 100%;
+        margin-bottom: 20px;
+    }
 }

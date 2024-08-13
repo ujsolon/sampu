@@ -1,5 +1,5 @@
 import { useRouter } from 'next/router';
-import { GameOneScreen } from '../../components/GameOneScreen';
+import GameOneScreen from '../../components/GameOneScreen';
 
 export default function GamePage() {
     const router = useRouter();
