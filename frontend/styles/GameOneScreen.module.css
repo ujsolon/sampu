@@ -3,6 +3,9 @@
     margin: 0 auto;
     padding: 20px;
     font-family: Arial, sans-serif;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
 }
 
 .gameScreen h2 {
@@ -33,6 +36,7 @@
     flex-wrap: wrap;
     align-items: flex-start;
     align-content: flex-start;
+    transition: background-color 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
 }
 
 .teamBox:hover {
@@ -312,4 +316,71 @@
 /* Ensure the tooltip is always clickable */
 .tooltip {
     pointer-events: auto;
+}
+
+.nonClickableTeam {
+    pointer-events: none;
+    opacity: 0.7;
+}
+
+.nonClickableTeam .playerAvatarWrapper {
+    pointer-events: auto;
+}
+
+
+.openGame {
+    background-color: rgba(24, 144, 255, 0.1);
+    /* Light blue background for open games */
+    border: 2px solid #1890ff;
+}
+
+.finishedGame {
+    background-color: rgba(0, 0, 0, 0.05);
+    /* Light gray background for finished games */
+    border: 2px solid #d9d9d9;
+}
+
+.finishedGame .teamBox {
+    opacity: 0.7;
+    pointer-events: none;
+}
+
+.finishedGame .teamBox .playerAvatarWrapper {
+    pointer-events: auto;
+}
+
+.finishedGame .teamBox:hover {
+    box-shadow: none;
+    cursor: default;
+}
+
+.gameInfo {
+    margin-bottom: 20px;
+}
+
+.timeInfo {
+    font-size: 1.1em;
+    font-weight: bold;
+    margin: 10px 0;
+    color: #333;
+}
+
+.statusBadge {
+    display: inline-block;
+    padding: 5px 10px;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 0.9em;
+}
+
+.openGame .statusBadge {
+    background-color: #52c41a;
+    /* Green for open games */
+    color: white;
+}
+
+.finishedGame .statusBadge {
+    background-color: #f5222d;
+    /* Red for finished games */
+    color: white;
 }

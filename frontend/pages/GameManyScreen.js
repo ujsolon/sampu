@@ -73,27 +73,41 @@ export default function GameManyScreen() {
             <h1 className={styles.screenH2}>Games</h1>
             <Link href="/add-game" className={styles.addButton}>Add Game</Link>
 
-            <h2>My Games</h2>
-            <div className={styles.gameList}>
-                {myGames.length > 0 ? (
-                    myGames.map(game => (
-                        <GameCard key={game.id} game={game} className={styles.gameCard} />
-                    ))
-                ) : (
-                    <p>You are not in any games.</p>
-                )}
-            </div>
+            <section>
+                <h2 className={styles.sectionTitle}>My Games</h2>
+                <div className={styles.gameList}>
+                    {myGames.length > 0 ? (
+                        myGames.map(game => (
+                            <GameCard
+                                key={game.id}
+                                game={game}
+                                className={`${styles.gameCard} ${game.status === 'finished' ? styles.finishedGame : styles.openGame}`}
+                                grayedOut={game.status === 'closed'} // Apply gray out if game is closed
+                            />
+                        ))
+                    ) : (
+                        <p className={styles.noGamesMessage}>You are not in any games.</p>
+                    )}
+                </div>
+            </section>
 
-            <h2>Other Games</h2>
-            <div className={styles.gameList}>
-                {otherGames.length > 0 ? (
-                    otherGames.map(game => (
-                        <GameCard key={game.id} game={game} className={styles.gameCard} />
-                    ))
-                ) : (
-                    <p>No other games available.</p>
-                )}
-            </div>
+            <section>
+                <h2 className={styles.sectionTitle}>Other Games</h2>
+                <div className={styles.gameList}>
+                    {otherGames.length > 0 ? (
+                        otherGames.map(game => (
+                            <GameCard
+                                key={game.id}
+                                game={game}
+                                className={`${styles.gameCard} ${game.status === 'finished' ? styles.finishedGame : styles.openGame}`}
+                                grayedOut={game.status === 'closed'} // Apply gray out if game is closed
+                            />
+                        ))
+                    ) : (
+                        <p className={styles.noGamesMessage}>No other games available.</p>
+                    )}
+                </div>
+            </section>
         </div>
     );
 }

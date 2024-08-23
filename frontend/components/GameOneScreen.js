@@ -2,13 +2,13 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
 import styles from '../styles/GameOneScreen.module.css';
 
-function TeamBox({ players, team, onRegister, onUnregister, playerRegistered, isClickable }) {
+function TeamBox({ players, team, onRegister, onUnregister, playerRegistered, isClickable, isGameFinished }) {
     const teamClass = team === 'team_1' ? styles.team1 : styles.team2;
 
     return (
         <div
-            className={`${styles.teamBox} ${teamClass} ${playerRegistered && playerRegistered !== team ? styles.grayedOut : ''} ${!isClickable ? styles.nonClickableTeam : ''}`}
-            onClick={() => isClickable && !playerRegistered && onRegister(team)}
+            className={`${styles.teamBox} ${teamClass} ${!isClickable || isGameFinished ? styles.nonClickableTeam : ''}`}
+            onClick={() => isClickable && !playerRegistered && !isGameFinished && onRegister(team)}
         >
             {players.map((player) => (
                 <div key={player.id} className={styles.playerAvatarWrapper}>
@@ -42,6 +42,7 @@ const GameOneScreen = ({ gameId }) => {
     const [gameDetails, setGameDetails] = useState(null);
     const [playerRegistered, setPlayerRegistered] = useState(null);
     const [currentPlayer, setCurrentPlayer] = useState(null);
+    const [timeInfo, setTimeInfo] = useState('');
 
     useEffect(() => {
         fetchCurrentPlayer();
@@ -52,6 +53,14 @@ const GameOneScreen = ({ gameId }) => {
             fetchGameDetails();
         }
     }, [currentPlayer]);
+
+    useEffect(() => {
+        if (gameDetails) {
+            updateTimeInfo();
+            const timer = setInterval(updateTimeInfo, 60000); // Update every minute
+            return () => clearInterval(timer);
+        }
+    }, [gameDetails]);
 
     async function fetchCurrentPlayer() {
         const { data: { user } } = await supabase.auth.getUser();
@@ -127,17 +136,46 @@ const GameOneScreen = ({ gameId }) => {
         }
     }
 
+    function updateTimeInfo() {
+        const now = new Date();
+        const gameTime = new Date(`${gameDetails.date}T${gameDetails.time}`);
+        const diffMs = Math.abs(gameTime - now);
+        const diffHours = diffMs / 36e5; // Hours difference
+        const diffDays = Math.floor(diffHours / 24);
+
+        let timeString;
+        if (diffDays > 0) {
+            timeString = `${diffDays} day${diffDays > 1 ? 's' : ''}`;
+        } else {
+            timeString = `${Math.round(diffHours)} hour${Math.round(diffHours) !== 1 ? 's' : ''}`;
+        }
+
+        if (gameDetails.status === 'open') {
+            if (gameTime > now) {
+                setTimeInfo(`Starting in ${timeString}`);
+            } else {
+                setTimeInfo(`Started ${timeString} ago`);
+            }
+        } else if (gameDetails.status === 'finished') {
+            setTimeInfo(`Ended ${timeString} ago`);
+        }
+    }
+
     if (!gameDetails) return <div>Loading...</div>;
 
     const team1Players = gameDetails.games_players.filter(p => p.team === 'team_1');
     const team2Players = gameDetails.games_players.filter(p => p.team === 'team_2');
+    const isGameFinished = gameDetails.status === 'finished';
 
     return (
-        <div className={styles.gameScreen}>
-            <h2>Court: {gameDetails.courts.name}</h2>
-            <p>Date: {gameDetails.date}</p>
-            <p>Time: {gameDetails.time}</p>
-            <p>Status: {gameDetails.status}</p>
+        <div className={`${styles.gameScreen} ${isGameFinished ? styles.finishedGame : styles.openGame}`}>
+            <div className={styles.gameInfo}>
+                <h2>{gameDetails.courts.name}</h2>
+                <p className={styles.timeInfo}>{timeInfo}</p>
+                <span className={styles.statusBadge}>
+                    {gameDetails.status.charAt(0).toUpperCase() + gameDetails.status.slice(1)}
+                </span>
+            </div>
 
             <div className={styles.teamsContainer}>
                 <TeamBox
@@ -147,6 +185,7 @@ const GameOneScreen = ({ gameId }) => {
                     onUnregister={handleUnregister}
                     playerRegistered={playerRegistered}
                     isClickable={!playerRegistered || playerRegistered === 'team_1'}
+                    isGameFinished={isGameFinished}
                 />
                 <TeamBox
                     players={team2Players.map(p => p.players)}
@@ -155,6 +194,7 @@ const GameOneScreen = ({ gameId }) => {
                     onUnregister={handleUnregister}
                     playerRegistered={playerRegistered}
                     isClickable={!playerRegistered || playerRegistered === 'team_2'}
+                    isGameFinished={isGameFinished}
                 />
             </div>
         </div>

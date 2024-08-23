@@ -1,7 +1,68 @@
+/* Specific local class for styling the Link component */
+.gameCardLink {
+    text-decoration: none;
+    /* Remove underline */
+}
+
+/* Keep existing styles */
 .gameCard {
-    border: 1px solid #ccc;
-    padding: 16px;
-    margin: 16px;
+    width: 250px;
+    /* Fixed width for uniformity */
+    height: 150px;
+    /* Fixed height for uniformity */
+    margin: 10px auto;
+    padding: 15px;
+    font-family: Arial, sans-serif;
     border-radius: 8px;
-    background-color: #f9f9f9;
+    border: 1px solid #ddd;
+    transition: background-color 0.3s ease, border-color 0.3s ease;
+    cursor: pointer;
+    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    display: flex;
+    /* Use Flexbox for better alignment */
+    flex-direction: column;
+    /* Align items vertically */
+    justify-content: center;
+    /* Center content vertically */
+    align-items: center;
+    /* Center content horizontally */
+}
+
+.openGame {
+    background-color: rgba(24, 144, 255, 0.1);
+    /* Light blue background for open games */
+    border: 2px solid #1890ff;
+}
+
+.finishedGame {
+    background-color: rgba(0, 0, 0, 0.05);
+    /* Light gray background for finished games */
+    border: 2px solid #d9d9d9;
+}
+
+.status {
+    font-weight: bold;
+    /* Make the status stand out */
+    color: #666;
+    /* Neutral color for text */
+}
+
+.gameCard:hover {
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+    /* Enhance hover effect */
+}
+
+.gameCard h3 {
+    color: #333;
+    margin-bottom: 10px;
+    font-size: 1.2em;
+    /* Slightly larger font for the court name */
+}
+
+.gameCard p {
+    margin: 5px 0;
+    /* Consistent spacing between lines */
+    font-size: 0.9em;
+    /* Slightly smaller font for descriptions */
 }
