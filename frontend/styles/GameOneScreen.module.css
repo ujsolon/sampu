@@ -146,6 +146,16 @@
     .teamBox {
         width: 100%;
         margin-bottom: 20px;
+        overflow-x: auto;
+        /* Enable horizontal scrolling on mobile */
+        overflow-y: hidden;
+        /* Hide vertical overflow */
+    }
+
+    .playerAvatarWrapper {
+        /* Ensure player avatars fit within the container */
+        flex: 1 1 auto;
+        margin: 5px;
     }
 }
 
