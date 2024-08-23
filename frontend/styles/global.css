@@ -31,3 +31,12 @@
     font-size: 24px;
     margin-bottom: 32px;
 }
+
+/* Global styles or in your layout CSS */
+html,
+body {
+    margin: 0;
+    padding: 0;
+    overflow-x: hidden;
+    /* Prevent horizontal scrollbar */
+}
