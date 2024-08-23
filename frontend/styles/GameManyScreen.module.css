@@ -61,6 +61,7 @@
     font-style: italic;
 }
 
+/* New styles for game status */
 .openGame {
     background-color: rgba(24, 144, 255, 0.1);
     border-color: #1890ff;
@@ -69,13 +70,6 @@
 .finishedGame {
     background-color: rgba(0, 0, 0, 0.05);
     border-color: #d9d9d9;
-}
-
-.grayedOut {
-    opacity: 0.5;
-    pointer-events: auto;
-    /* Allow clicking but visually gray out */
-    transition: opacity 0.3s ease;
 }
 
 .statusBadge {

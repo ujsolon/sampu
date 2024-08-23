@@ -27,6 +27,20 @@
     /* Center content vertically */
     align-items: center;
     /* Center content horizontally */
+    position: relative;
+    /* Add this to allow absolute positioning of children */
+}
+
+.gameId {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    background-color: rgba(0, 0, 0, 0.1);
+    color: #333;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 0.8em;
+    font-weight: bold;
 }
 
 .openGame {

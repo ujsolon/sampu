@@ -4,6 +4,12 @@ import GameCard from '../components/GameCard';
 import styles from '../styles/GameManyScreen.module.css';
 import Link from 'next/link';
 
+function getTimeDifference(gameDate, gameTime) {
+    const gameDateTime = new Date(`${gameDate}T${gameTime}`);
+    const currentDateTime = new Date();
+    return Math.abs(gameDateTime - currentDateTime);
+}
+
 export default function GameManyScreen() {
     const [myGames, setMyGames] = useState([]);
     const [otherGames, setOtherGames] = useState([]);
@@ -51,15 +57,16 @@ export default function GameManyScreen() {
                 return;
             }
 
-            // Sort games by date and time
+            // Sort games by their proximity to the current datetime
             allGamesData.sort((a, b) => {
-                const dateA = new Date(`${a.date}T${a.time}`);
-                const dateB = new Date(`${b.date}T${b.time}`);
-                return dateA - dateB;
+                return getTimeDifference(a.date, a.time) - getTimeDifference(b.date, b.time);
             });
 
-            const myGamesData = allGamesData.filter(game => myGameIds.includes(game.id));
-            const otherGamesData = allGamesData.filter(game => !myGameIds.includes(game.id));
+            // Get the 6 closest games
+            const closestGames = allGamesData.slice(0, 6);
+
+            const myGamesData = closestGames.filter(game => myGameIds.includes(game.id));
+            const otherGamesData = closestGames.filter(game => !myGameIds.includes(game.id));
 
             setMyGames(myGamesData);
             setOtherGames(otherGamesData);
@@ -82,11 +89,11 @@ export default function GameManyScreen() {
                                 key={game.id}
                                 game={game}
                                 className={`${styles.gameCard} ${game.status === 'finished' ? styles.finishedGame : styles.openGame}`}
-                                grayedOut={game.status === 'closed'} // Apply gray out if game is closed
+                                grayedOut={game.status === 'closed'}
                             />
                         ))
                     ) : (
-                        <p className={styles.noGamesMessage}>You are not in any games.</p>
+                        <p className={styles.noGamesMessage}>No games available.</p>
                     )}
                 </div>
             </section>
@@ -100,11 +107,11 @@ export default function GameManyScreen() {
                                 key={game.id}
                                 game={game}
                                 className={`${styles.gameCard} ${game.status === 'finished' ? styles.finishedGame : styles.openGame}`}
-                                grayedOut={game.status === 'closed'} // Apply gray out if game is closed
+                                grayedOut={game.status === 'closed'}
                             />
                         ))
                     ) : (
-                        <p className={styles.noGamesMessage}>No other games available.</p>
+                        <p className={styles.noGamesMessage}>No games available.</p>
                     )}
                 </div>
             </section>

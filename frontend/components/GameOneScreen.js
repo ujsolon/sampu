@@ -171,6 +171,7 @@ const GameOneScreen = ({ gameId }) => {
         <div className={`${styles.gameScreen} ${isGameFinished ? styles.finishedGame : styles.openGame}`}>
             <div className={styles.gameInfo}>
                 <h2>{gameDetails.courts.name}</h2>
+                <p className={styles.gameNumber}>Game #{gameDetails.id}</p>
                 <p className={styles.timeInfo}>{timeInfo}</p>
                 <span className={styles.statusBadge}>
                     {gameDetails.status.charAt(0).toUpperCase() + gameDetails.status.slice(1)}

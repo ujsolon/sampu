@@ -13,11 +13,13 @@ function GameCard({ game }) {
                 `${styles.gameCard} ${styles.openGame}`;
 
     return (
-        <Link href={`/game/${game.id}`} className={cardClassName}>
-            <div className={styles.gameId}>{game.id}</div>
-            <h3>Court {game.court_id}</h3>
-            <p>{game.status === 'finished' ? `Ended ${elapsedTime}` : `Starting in ${elapsedTime}`}</p>
-            <p className={styles.status}>{game.status.charAt(0).toUpperCase() + game.status.slice(1)}</p>
+        <Link href={`/game/${game.id}`} className={styles.gameCardLink}>
+            <div className={cardClassName}>
+                <div className={styles.gameId}>#{game.id}</div>
+                <h3>Court {game.court_id}</h3>
+                <p>{game.status === 'finished' ? `Ended ${elapsedTime}` : `Starting in ${elapsedTime}`}</p>
+                <p className={styles.status}>{game.status.charAt(0).toUpperCase() + game.status.slice(1)}</p>
+            </div>
         </Link>
     );
 }
