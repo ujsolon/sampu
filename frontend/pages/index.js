@@ -3,6 +3,7 @@ import { useRouter } from 'next/router';
 import { supabase } from '../utils/supabase';
 import { signOut } from '../utils/auth';
 import styles from '../styles/HomeScreen.module.css';
+import Layout from '../components/Layout';
 
 export default function HomeScreen() {
     const [user, setUser] = useState(null);
@@ -28,21 +29,23 @@ export default function HomeScreen() {
     if (!user) return null;
 
     return (
-        <div className={styles.homeScreen}>
-            <header className={styles.header}>
-                <h1>Sampu</h1>
-                <button onClick={handleSignOut} className={styles.signOutButton}>Sign Out</button>
-            </header>
+        <Layout>
+            <div className={styles.homeScreen}>
+                <header className={styles.header}>
+                    <h1>Sampu</h1>
+                    <button onClick={handleSignOut} className={styles.signOutButton}>Sign Out</button>
+                </header>
 
-            <main className={styles.main}>
-                <div className={styles.welcomeCard}>
-                    <h2>Welcome, {user.email}!</h2>
-                </div>
+                <main className={styles.main}>
+                    <div className={styles.welcomeCard}>
+                        <h2>Welcome, {user.email}!</h2>
+                    </div>
 
-                <div className={styles.cardContainer}>
-                    {/* ... (rest of your card components) ... */}
-                </div>
-            </main>
-        </div>
+                    <div className={styles.cardContainer}>
+                        {/* ... (rest of your card components) ... */}
+                    </div>
+                </main>
+            </div>
+        </Layout>
     );
 }

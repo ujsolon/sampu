@@ -3,6 +3,7 @@ import { supabase } from '../utils/supabase';
 import GameCard from '../components/GameCard';
 import styles from '../styles/GameManyScreen.module.css';
 import Link from 'next/link';
+import Layout from '../components/Layout';
 
 function getTimeDifference(gameDate, gameTime) {
     const gameDateTime = new Date(`${gameDate}T${gameTime}`);
@@ -76,45 +77,47 @@ export default function GameManyScreen() {
     }
 
     return (
-        <div className={styles.gameScreen}>
-            <h1 className={styles.screenH2}>Games</h1>
-            <Link href="/add-game" className={styles.addButton}>Add Game</Link>
+        <Layout>
+            <div className={styles.gameScreen}>
+                <h1 className={styles.screenH2}>Games</h1>
+                <Link href="/add-game" className={styles.addButton}>Add Game</Link>
 
-            <section>
-                <h2 className={styles.sectionTitle}>My Games</h2>
-                <div className={styles.gameList}>
-                    {myGames.length > 0 ? (
-                        myGames.map(game => (
-                            <GameCard
-                                key={game.id}
-                                game={game}
-                                className={`${styles.gameCard} ${game.status === 'finished' ? styles.finishedGame : styles.openGame}`}
-                                grayedOut={game.status === 'closed'}
-                            />
-                        ))
-                    ) : (
-                        <p className={styles.noGamesMessage}>No games available.</p>
-                    )}
-                </div>
-            </section>
+                <section>
+                    <h2 className={styles.sectionTitle}>My Games</h2>
+                    <div className={styles.gameList}>
+                        {myGames.length > 0 ? (
+                            myGames.map(game => (
+                                <GameCard
+                                    key={game.id}
+                                    game={game}
+                                    className={`${styles.gameCard} ${game.status === 'finished' ? styles.finishedGame : styles.openGame}`}
+                                    grayedOut={game.status === 'closed'}
+                                />
+                            ))
+                        ) : (
+                            <p className={styles.noGamesMessage}>No games available.</p>
+                        )}
+                    </div>
+                </section>
 
-            <section>
-                <h2 className={styles.sectionTitle}>Other Games</h2>
-                <div className={styles.gameList}>
-                    {otherGames.length > 0 ? (
-                        otherGames.map(game => (
-                            <GameCard
-                                key={game.id}
-                                game={game}
-                                className={`${styles.gameCard} ${game.status === 'finished' ? styles.finishedGame : styles.openGame}`}
-                                grayedOut={game.status === 'closed'}
-                            />
-                        ))
-                    ) : (
-                        <p className={styles.noGamesMessage}>No games available.</p>
-                    )}
-                </div>
-            </section>
-        </div>
+                <section>
+                    <h2 className={styles.sectionTitle}>Other Games</h2>
+                    <div className={styles.gameList}>
+                        {otherGames.length > 0 ? (
+                            otherGames.map(game => (
+                                <GameCard
+                                    key={game.id}
+                                    game={game}
+                                    className={`${styles.gameCard} ${game.status === 'finished' ? styles.finishedGame : styles.openGame}`}
+                                    grayedOut={game.status === 'closed'}
+                                />
+                            ))
+                        ) : (
+                            <p className={styles.noGamesMessage}>No games available.</p>
+                        )}
+                    </div>
+                </section>
+            </div>
+        </Layout>
     );
 }
