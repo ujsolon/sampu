@@ -8,12 +8,15 @@ function GameCard({ game }) {
 
     // Determine the className based on game status
     const cardClassName =
-        game.status === 'finished' ? `${styles.gameCard} ${styles.finishedGame}` : `${styles.gameCard} ${styles.openGame}`;
+        game.status === 'in_progress' ? `${styles.gameCard} ${styles.inProgressGame}` :
+            game.status === 'finished' ? `${styles.gameCard} ${styles.finishedGame}` :
+                `${styles.gameCard} ${styles.openGame}`;
 
     return (
         <Link href={`/game/${game.id}`} className={cardClassName}>
+            <div className={styles.gameId}>{game.id}</div>
             <h3>Court {game.court_id}</h3>
-            <p>Started {elapsedTime}</p>
+            <p>{game.status === 'finished' ? `Ended ${elapsedTime}` : `Starting in ${elapsedTime}`}</p>
             <p className={styles.status}>{game.status.charAt(0).toUpperCase() + game.status.slice(1)}</p>
         </Link>
     );
