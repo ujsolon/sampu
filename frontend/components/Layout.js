@@ -16,18 +16,19 @@ export default function Layout({ children }) {
     return (
         <div className={styles.layout}>
             <nav className={styles.nav}>
-                {navItems.map((item) => (
-                    <Link
-                        href={item.path}
-                        key={item.path}
-                        passHref
-                        className={`${styles.navItem} ${router.pathname === item.path ? styles.activeNavItem : ''}`}
-                    >
-                        <span className={styles.navIcon}>
-                            <i className={item.icon}></i>
-                        </span>
-                    </Link>
-                ))}
+                <div className={styles.navItemsContainer}>
+                    {navItems.map((item) => (
+                        <Link
+                            href={item.path}
+                            key={item.path}
+                            className={`${styles.navItem} ${router.pathname === item.path ? styles.activeNavItem : ''}`}
+                        >
+                            <span className={styles.navIcon}>
+                                <i className={item.icon}></i>
+                            </span>
+                        </Link>
+                    ))}
+                </div>
             </nav>
             <main className={styles.main}>{children}</main>
         </div>

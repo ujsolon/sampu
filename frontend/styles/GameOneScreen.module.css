@@ -6,6 +6,8 @@
     border-radius: 8px;
     margin-bottom: 20px;
     transition: background-color 0.3s ease, border-color 0.3s ease;
+    box-sizing: border-box;
+    overflow: hidden;
 }
 
 .gameScreen h2 {
@@ -36,7 +38,9 @@
     flex-wrap: wrap;
     align-items: flex-start;
     align-content: flex-start;
-    transition: background-color 0.3s ease, opacity 0.3s ease, box-shadow 0.3s ease;
+    box-sizing: border-box;
+    min-height: 150px;
+    /* Set a minimum height */
 }
 
 .teamBox:hover {
@@ -137,15 +141,53 @@
     opacity: 0.5;
 }
 
-/* Responsive design */
-@media (max-width: 600px) {
+/* Mobile-specific styles */
+@media (max-width: 768px) {
+    .gameScreen {
+        padding: 10px;
+    }
+
     .teamsContainer {
         flex-direction: column;
     }
 
     .teamBox {
         width: 100%;
-        margin-bottom: 20px;
+        margin-bottom: 10px;
+        padding: 10px;
+        min-height: 100px;
+        /* Adjust minimum height for mobile */
+    }
+
+    .playerAvatarWrapper {
+        margin: 3px;
+    }
+
+    .playerAvatar {
+        width: 30px;
+        height: 30px;
+    }
+}
+
+/* Extra small screens */
+@media (max-width: 480px) {
+    .gameScreen {
+        padding: 5px;
+    }
+
+    .teamBox {
+        padding: 8px;
+        min-height: 80px;
+        /* Further adjust minimum height for very small screens */
+    }
+
+    .playerAvatar {
+        width: 25px;
+        height: 25px;
+    }
+
+    .playerAvatarWrapper {
+        margin: 2px;
     }
 }
 
@@ -248,13 +290,22 @@
     background-color: rgba(0, 0, 255, 0.1);
 }
 
+.playerAvatarsContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: flex-start;
+    max-width: 100%;
+    min-height: 100%;
+    /* Ensure it takes up all available space */
+}
+
 .playerAvatarWrapper {
     position: relative;
     display: inline-block;
     margin: 5px;
     z-index: 2;
-    /* Ensure it's above other elements */
 }
+
 
 .playerAvatar {
     width: 40px;

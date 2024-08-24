@@ -19,7 +19,6 @@
 /* Navigation bar */
 .nav {
     display: flex;
-    flex-direction: column;
     align-items: center;
     width: 60px;
     /* Width of the navbar */
@@ -31,7 +30,16 @@
     /* Extend to the top */
     left: 0;
     z-index: 1000;
-    transition: width 0.3s ease;
+}
+
+/* Container for nav items */
+.navItemsContainer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    width: 100%;
 }
 
 /* Navigation items */
@@ -39,11 +47,11 @@
     text-decoration: none;
     color: #333;
     font-size: 24px;
-    padding: 10px;
-    position: relative;
+    padding: 15px 0;
     display: flex;
     align-items: center;
     justify-content: center;
+    width: 100%;
 }
 
 /* Icons */
@@ -60,12 +68,6 @@
     /* Dark highlight background */
 }
 
-/* Tooltip text (removed hover effect) */
-.navItem::after {
-    content: none;
-    /* No text on hover */
-}
-
 /* Responsive adjustments */
 @media (max-width: 768px) {
     .nav {
@@ -76,8 +78,11 @@
         bottom: 0;
     }
 
+    .navItemsContainer {
+        flex-direction: row;
+    }
+
     .navItem {
-        margin: 0;
-        padding: 10px;
+        padding: 10px 0;
     }
 }

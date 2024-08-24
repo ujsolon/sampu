@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
 import styles from '../styles/GameOneScreen.module.css';
+import Layout from '../components/Layout';
 
 function TeamBox({ players, team, onRegister, onUnregister, playerRegistered, isClickable, isGameFinished }) {
     const teamClass = team === 'team_1' ? styles.team1 : styles.team2;
@@ -10,22 +11,24 @@ function TeamBox({ players, team, onRegister, onUnregister, playerRegistered, is
             className={`${styles.teamBox} ${teamClass} ${!isClickable || isGameFinished ? styles.nonClickableTeam : ''}`}
             onClick={() => isClickable && !playerRegistered && !isGameFinished && onRegister(team)}
         >
-            {players.map((player) => (
-                <div key={player.id} className={styles.playerAvatarWrapper}>
-                    <div className={styles.playerAvatar}>
-                        {player.avatar_base64 ? (
-                            <img
-                                src={`data:image/jpeg;base64,${player.avatar_base64}`}
-                                alt={player.name}
-                                className={styles.avatarImage}
-                            />
-                        ) : (
-                            <div className={styles.defaultAvatar}>{player.name[0]}</div>
-                        )}
+            <div className={styles.playerAvatarsContainer}>
+                {players.map((player) => (
+                    <div key={player.id} className={styles.playerAvatarWrapper}>
+                        <div className={styles.playerAvatar}>
+                            {player.avatar_base64 ? (
+                                <img
+                                    src={`data:image/jpeg;base64,${player.avatar_base64}`}
+                                    alt={player.name}
+                                    className={styles.avatarImage}
+                                />
+                            ) : (
+                                <div className={styles.defaultAvatar}>{player.name[0]}</div>
+                            )}
+                        </div>
+                        <span className={styles.tooltip}>{player.name}</span>
                     </div>
-                    <span className={styles.tooltip}>{player.name}</span>
-                </div>
-            ))}
+                ))}
+            </div>
             {playerRegistered === team && (
                 <button className={styles.unregisterButton} onClick={(e) => {
                     e.stopPropagation();
@@ -168,37 +171,39 @@ const GameOneScreen = ({ gameId }) => {
     const isGameFinished = gameDetails.status === 'finished';
 
     return (
-        <div className={`${styles.gameScreen} ${isGameFinished ? styles.finishedGame : styles.openGame}`}>
-            <div className={styles.gameInfo}>
-                <h2>{gameDetails.courts.name}</h2>
-                <p className={styles.gameNumber}>Game #{gameDetails.id}</p>
-                <p className={styles.timeInfo}>{timeInfo}</p>
-                <span className={styles.statusBadge}>
-                    {gameDetails.status.charAt(0).toUpperCase() + gameDetails.status.slice(1)}
-                </span>
-            </div>
+        <Layout>
+            <div className={`${styles.gameScreen} ${isGameFinished ? styles.finishedGame : styles.openGame}`}>
+                <div className={styles.gameInfo}>
+                    <h2>{gameDetails.courts.name}</h2>
+                    <p className={styles.gameNumber}>Game #{gameDetails.id}</p>
+                    <p className={styles.timeInfo}>{timeInfo}</p>
+                    <span className={styles.statusBadge}>
+                        {gameDetails.status.charAt(0).toUpperCase() + gameDetails.status.slice(1)}
+                    </span>
+                </div>
 
-            <div className={styles.teamsContainer}>
-                <TeamBox
-                    players={team1Players.map(p => p.players)}
-                    team="team_1"
-                    onRegister={handleRegister}
-                    onUnregister={handleUnregister}
-                    playerRegistered={playerRegistered}
-                    isClickable={!playerRegistered || playerRegistered === 'team_1'}
-                    isGameFinished={isGameFinished}
-                />
-                <TeamBox
-                    players={team2Players.map(p => p.players)}
-                    team="team_2"
-                    onRegister={handleRegister}
-                    onUnregister={handleUnregister}
-                    playerRegistered={playerRegistered}
-                    isClickable={!playerRegistered || playerRegistered === 'team_2'}
-                    isGameFinished={isGameFinished}
-                />
+                <div className={styles.teamsContainer}>
+                    <TeamBox
+                        players={team1Players.map(p => p.players)}
+                        team="team_1"
+                        onRegister={handleRegister}
+                        onUnregister={handleUnregister}
+                        playerRegistered={playerRegistered}
+                        isClickable={!playerRegistered || playerRegistered === 'team_1'}
+                        isGameFinished={isGameFinished}
+                    />
+                    <TeamBox
+                        players={team2Players.map(p => p.players)}
+                        team="team_2"
+                        onRegister={handleRegister}
+                        onUnregister={handleUnregister}
+                        playerRegistered={playerRegistered}
+                        isClickable={!playerRegistered || playerRegistered === 'team_2'}
+                        isGameFinished={isGameFinished}
+                    />
+                </div>
             </div>
-        </div>
+        </Layout>
     );
 };
 
