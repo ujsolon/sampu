@@ -2,6 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
 import styles from '../styles/GameOneScreen.module.css';
 import Layout from '../components/Layout';
+import { formatDistanceToNow } from 'date-fns';
+
+export function updateTimeInfo(gameDetails) {
+    const now = new Date();
+    const gameTime = new Date(`${gameDetails.date}T${gameDetails.time}`);
+    const timeString = formatDistanceToNow(gameTime, { addSuffix: true });
+
+    if (gameDetails.status === 'open') {
+        if (gameTime > now) {
+            return `Starting ${timeString}`;
+        } else {
+            return `Started ${timeString}`;
+        }
+    } else if (gameDetails.status === 'finished') {
+        return `Ended ${timeString}`;
+    }
+
+    return timeString;
+}
 
 function TeamBox({ players, team, onRegister, onUnregister, playerRegistered, isClickable, isGameFinished }) {
     const teamClass = team === 'team_1' ? styles.team1 : styles.team2;
@@ -59,8 +78,9 @@ const GameOneScreen = ({ gameId }) => {
 
     useEffect(() => {
         if (gameDetails) {
-            updateTimeInfo();
-            const timer = setInterval(updateTimeInfo, 60000); // Update every minute
+            const updateTime = () => setTimeInfo(updateTimeInfo(gameDetails));
+            updateTime(); // Initial update
+            const timer = setInterval(updateTime, 60000); // Update every minute
             return () => clearInterval(timer);
         }
     }, [gameDetails]);
@@ -136,31 +156,6 @@ const GameOneScreen = ({ gameId }) => {
         else {
             fetchGameDetails();
             setPlayerRegistered(null);
-        }
-    }
-
-    function updateTimeInfo() {
-        const now = new Date();
-        const gameTime = new Date(`${gameDetails.date}T${gameDetails.time}`);
-        const diffMs = Math.abs(gameTime - now);
-        const diffHours = diffMs / 36e5; // Hours difference
-        const diffDays = Math.floor(diffHours / 24);
-
-        let timeString;
-        if (diffDays > 0) {
-            timeString = `${diffDays} day${diffDays > 1 ? 's' : ''}`;
-        } else {
-            timeString = `${Math.round(diffHours)} hour${Math.round(diffHours) !== 1 ? 's' : ''}`;
-        }
-
-        if (gameDetails.status === 'open') {
-            if (gameTime > now) {
-                setTimeInfo(`Starting in ${timeString}`);
-            } else {
-                setTimeInfo(`Started ${timeString} ago`);
-            }
-        } else if (gameDetails.status === 'finished') {
-            setTimeInfo(`Ended ${timeString} ago`);
         }
     }
 

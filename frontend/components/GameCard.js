@@ -1,10 +1,9 @@
 import Link from 'next/link';
-import { formatDistanceToNow, parseISO } from 'date-fns';
 import styles from '../styles/GameCard.module.css';
+import { updateTimeInfo } from './GameOneScreen'; // Adjust the import path as needed
 
 function GameCard({ game }) {
-    const gameDateTime = parseISO(`${game.date}T${game.time}`);
-    const elapsedTime = formatDistanceToNow(gameDateTime, { addSuffix: true });
+    const timeInfo = updateTimeInfo(game);
 
     // Determine the className based on game status
     const cardClassName =
@@ -17,7 +16,7 @@ function GameCard({ game }) {
             <div className={cardClassName}>
                 <div className={styles.gameId}>#{game.id}</div>
                 <h3>Court {game.court_id}</h3>
-                <p>{game.status === 'finished' ? `Ended ${elapsedTime}` : `Starting in ${elapsedTime}`}</p>
+                <p>{timeInfo}</p>
                 <p className={styles.status}>{game.status.charAt(0).toUpperCase() + game.status.slice(1)}</p>
             </div>
         </Link>
