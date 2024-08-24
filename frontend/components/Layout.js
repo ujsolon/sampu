@@ -8,8 +8,8 @@ export default function Layout({ children }) {
 
     const navItems = [
         { path: '/', icon: 'fas fa-home' },
-        { path: '/court', icon: 'fas fa-solid fa-building' },
         { path: '/game', icon: 'fas fa-basketball-ball' },
+        { path: '/court', icon: 'fas fa-solid fa-building' },
         { path: '/player/info', icon: 'fas fa-user' },
     ];
 

@@ -30,7 +30,7 @@ export default function HomeScreen() {
 
     return (
         <Layout>
-            <div className={styles.homeScreen}>
+            <div className={styles.homeScreenContent}>
                 <header className={styles.header}>
                     <h1>Sampu</h1>
                     <button onClick={handleSignOut} className={styles.signOutButton}>Sign Out</button>
