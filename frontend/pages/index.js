@@ -42,7 +42,18 @@ export default function HomeScreen() {
                     </div>
 
                     <div className={styles.cardContainer}>
-                        {/* ... (rest of your card components) ... */}
+                        <div className={styles.largeCard}>
+                            <h3>Card 1 Title</h3>
+                            <p>Content for Card 1</p>
+                        </div>
+                        <div className={styles.largeCard}>
+                            <h3>Card 2 Title</h3>
+                            <p>Content for Card 2</p>
+                        </div>
+                        <div className={styles.largeCard}>
+                            <h3>Card 3 Title</h3>
+                            <p>Content for Card 3</p>
+                        </div>
                     </div>
                 </main>
             </div>
