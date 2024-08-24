@@ -1,8 +1,9 @@
 .homeScreen {
-    padding: 20px;
-    max-width: 1200px;
+    padding: 10px;
+    max-width: 100%;
     margin: 0 auto;
     font-family: Arial, sans-serif;
+    box-sizing: border-box;
 }
 
 .header {
@@ -43,15 +44,15 @@
 
 .cardContainer {
     display: flex;
-    flex-wrap: wrap;
+    flex-direction: column;
     gap: 20px;
-    justify-content: space-between;
+    width: 100%;
 }
 
 .largeCard {
-    flex: 1 1 300px;
-    min-height: 200px;
-    padding: 20px;
+    width: 100%;
+    min-height: 150px;
+    padding: 15px;
     border-radius: 8px;
     border: 1px solid #ddd;
     transition: all 0.3s ease;
@@ -63,6 +64,7 @@
     justify-content: center;
     align-items: center;
     background-color: #ffffff;
+    box-sizing: border-box;
 }
 
 .largeCard:hover {
@@ -73,36 +75,37 @@
 .largeCard h3 {
     color: #333;
     margin-bottom: 10px;
-    font-size: 1.4em;
+    font-size: 1.2em;
 }
 
 .largeCard p {
     margin: 5px 0;
-    font-size: 1em;
+    font-size: 0.9em;
     color: #666;
 }
 
-@media (max-width: 768px) {
+@media (min-width: 768px) {
     .homeScreen {
-        padding: 10px;
-    }
-
-    .header {
-        flex-direction: column;
-        align-items: flex-start;
-        gap: 10px;
-    }
-
-    .signOutButton {
-        align-self: flex-end;
+        padding: 20px;
     }
 
     .cardContainer {
-        flex-direction: column;
+        flex-direction: row;
+        flex-wrap: wrap;
+        justify-content: space-between;
     }
 
     .largeCard {
-        width: 100%;
-        min-height: 150px;
+        flex: 1 1 300px;
+        min-height: 200px;
+        padding: 20px;
+    }
+
+    .largeCard h3 {
+        font-size: 1.4em;
+    }
+
+    .largeCard p {
+        font-size: 1em;
     }
 }
