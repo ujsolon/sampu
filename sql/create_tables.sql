@@ -22,16 +22,22 @@ CREATE TABLE courts (
 );
 
 -- Create games table with status constraint
+-- Updated games table with duration as an INTEGER for minutes
 CREATE TABLE games (
   id SERIAL NOT NULL PRIMARY KEY,
   court_id INTEGER REFERENCES courts (id),
+  game_name TEXT DEFAULT 'Game',  -- Column for custom game name
   date DATE NOT NULL,
   time TIME NOT NULL,
+  duration INTEGER DEFAULT 60,  -- duration in minutes
   created_at TIMESTAMP DEFAULT NOW(),
   created_by INTEGER REFERENCES players (id),
   status TEXT NOT NULL,
+  team_1_name TEXT DEFAULT 'Team 1',  -- Column for team 1 custom name
+  team_2_name TEXT DEFAULT 'Team 2',  -- Column for team 2 custom name
   CONSTRAINT check_game_status CHECK (status IN ('open', 'in_progress', 'finished', 'cancelled'))
 );
+
 
 -- Create games_players table with team constraint
 CREATE TABLE games_players (
