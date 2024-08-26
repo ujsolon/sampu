@@ -29,40 +29,43 @@ export function updateTimeInfo(gameDetails) {
     return timeString;
 }
 
-function TeamBox({ players, team, onRegister, onUnregister, playerRegistered, isClickable, isGameFinished }) {
+function TeamBox({ players, team, teamName, onRegister, onUnregister, playerRegistered, isClickable, isGameFinished }) {
     const teamClass = team === 'team_1' ? styles.team1 : styles.team2;
 
     return (
-        <div
-            className={`${styles.teamBox} ${teamClass} ${!isClickable || isGameFinished ? styles.nonClickableTeam : ''}`}
-            onClick={() => isClickable && !playerRegistered && !isGameFinished && onRegister(team)}
-        >
-            <div className={styles.playerAvatarsContainer}>
-                {players.map((player) => (
-                    <div key={player.id} className={styles.playerAvatarWrapper}>
-                        <div className={styles.playerAvatar}>
-                            {player.avatar_base64 ? (
-                                <img
-                                    src={`data:image/jpeg;base64,${player.avatar_base64}`}
-                                    alt={player.name}
-                                    className={styles.avatarImage}
-                                />
-                            ) : (
-                                <div className={styles.defaultAvatar}>{player.name[0]}</div>
-                            )}
+        <div className={styles.teamBoxWrapper}>
+            <div
+                className={`${styles.teamBox} ${teamClass} ${!isClickable || isGameFinished ? styles.nonClickableTeam : ''}`}
+                onClick={() => isClickable && !playerRegistered && !isGameFinished && onRegister(team)}
+            >
+                <div className={styles.playerAvatarsContainer}>
+                    {players.map((player) => (
+                        <div key={player.id} className={styles.playerAvatarWrapper}>
+                            <div className={styles.playerAvatar}>
+                                {player.avatar_base64 ? (
+                                    <img
+                                        src={`data:image/jpeg;base64,${player.avatar_base64}`}
+                                        alt={player.name}
+                                        className={styles.avatarImage}
+                                    />
+                                ) : (
+                                    <div className={styles.defaultAvatar}>{player.name[0]}</div>
+                                )}
+                            </div>
+                            <span className={styles.tooltip}>{player.name}</span>
                         </div>
-                        <span className={styles.tooltip}>{player.name}</span>
-                    </div>
-                ))}
+                    ))}
+                </div>
+                {playerRegistered === team && (
+                    <button className={styles.unregisterButton} onClick={(e) => {
+                        e.stopPropagation();
+                        onUnregister();
+                    }}>
+                        &times;
+                    </button>
+                )}
             </div>
-            {playerRegistered === team && (
-                <button className={styles.unregisterButton} onClick={(e) => {
-                    e.stopPropagation();
-                    onUnregister();
-                }}>
-                    &times;
-                </button>
-            )}
+            <p className={styles.teamName}>{teamName}</p>
         </div>
     );
 }
@@ -72,6 +75,7 @@ const GameOneScreen = ({ gameId }) => {
     const [playerRegistered, setPlayerRegistered] = useState(null);
     const [currentPlayer, setCurrentPlayer] = useState(null);
     const [timeInfo, setTimeInfo] = useState('');
+    const [isEditingName, setIsEditingName] = useState(false);
 
     useEffect(() => {
         fetchCurrentPlayer();
@@ -110,13 +114,13 @@ const GameOneScreen = ({ gameId }) => {
         const { data, error } = await supabase
             .from('games')
             .select(`
-                *,
-                games_players!game_players_game_id_fkey(
-                    player_id,
-                    team,
-                    players!game_players_player_id_fkey(id, name, avatar_base64)
-                ),
-                courts(name)
+            *,
+            games_players!game_players_game_id_fkey(
+            player_id,
+            team,
+            players!game_players_player_id_fkey(id, name, avatar_base64)
+            ),
+            courts(name)
             `)
             .eq('id', gameId)
             .single();
@@ -166,6 +170,19 @@ const GameOneScreen = ({ gameId }) => {
         }
     }
 
+    async function handleGameNameUpdate(newName) {
+        const { data, error } = await supabase
+            .from('games')
+            .update({ game_name: newName })
+            .eq('id', gameId);
+
+        if (error) console.error('Error updating game name:', error);
+        else {
+            setGameDetails({ ...gameDetails, game_name: newName });
+            setIsEditingName(false);
+        }
+    }
+
     if (!gameDetails) return <div>Loading...</div>;
 
     const team1Players = gameDetails.games_players.filter(p => p.team === 'team_1');
@@ -176,7 +193,29 @@ const GameOneScreen = ({ gameId }) => {
         <Layout>
             <div className={`${styles.gameScreen} ${isGameFinished ? styles.finishedGame : styles.openGame}`}>
                 <div className={styles.gameInfo}>
-                    <h2>{gameDetails.game_name}</h2>
+                    {isEditingName ? (
+                        <input
+                            type="text"
+                            value={gameDetails.game_name}
+                            onChange={(e) => setGameDetails({ ...gameDetails, game_name: e.target.value })}
+                            onBlur={() => handleGameNameUpdate(gameDetails.game_name)}
+                            onKeyPress={(e) => {
+                                if (e.key === 'Enter') {
+                                    handleGameNameUpdate(gameDetails.game_name);
+                                }
+                            }}
+                            autoFocus
+                            className={styles.gameNameInput}
+                        />
+                    ) : (
+                        <h2
+                            onDoubleClick={() => setIsEditingName(true)}
+                            style={{ cursor: 'pointer' }}
+                            title="Double-click to edit"
+                        >
+                            {gameDetails.game_name}
+                        </h2>
+                    )}
                     <p className={styles.courtInfo}>
                         {gameDetails.courts.name} ({new Date(`${gameDetails.date}T${gameDetails.time}`).toLocaleString()})
                     </p>
@@ -190,6 +229,7 @@ const GameOneScreen = ({ gameId }) => {
                     <TeamBox
                         players={team1Players.map(p => p.players)}
                         team="team_1"
+                        teamName={gameDetails.team_1_name}
                         onRegister={handleRegister}
                         onUnregister={handleUnregister}
                         playerRegistered={playerRegistered}
@@ -199,6 +239,7 @@ const GameOneScreen = ({ gameId }) => {
                     <TeamBox
                         players={team2Players.map(p => p.players)}
                         team="team_2"
+                        teamName={gameDetails.team_2_name}
                         onRegister={handleRegister}
                         onUnregister={handleUnregister}
                         playerRegistered={playerRegistered}
