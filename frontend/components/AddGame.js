@@ -66,12 +66,23 @@ export default function AddGame() {
             return;
         }
 
+        // Combine date and time input into a single Date object in the local timezone
+        const localDateTimeString = `${date}T${time}`;
+        const localDateTime = new Date(localDateTimeString);
+
+        // Convert to UTC
+        const utcDateTime = new Date(localDateTime.toISOString());
+
+        // Split date and time in ISO format
+        const utcDate = utcDateTime.toISOString().split('T')[0];
+        const utcTime = utcDateTime.toISOString().split('T')[1].slice(0, 8);
+
         const { data, error } = await supabase
             .from('games')
             .insert([{
                 court_id: courtId,
-                date,
-                time,
+                date: utcDate, // Store the date in UTC
+                time: utcTime, // Store the time in UTC
                 status,
                 created_by: player.id
             }]);
