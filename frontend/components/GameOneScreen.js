@@ -29,7 +29,19 @@ export function updateTimeInfo(gameDetails) {
     return timeString;
 }
 
-function TeamBox({ players, team, teamName, onRegister, onUnregister, playerRegistered, isClickable, isGameFinished }) {
+function TeamBox({
+    players,
+    team,
+    teamName,
+    onRegister,
+    onUnregister,
+    playerRegistered,
+    isClickable,
+    isGameFinished,
+    isEditingName,
+    setIsEditingName,
+    onTeamNameUpdate
+}) {
     const teamClass = team === 'team_1' ? styles.team1 : styles.team2;
 
     return (
@@ -65,7 +77,30 @@ function TeamBox({ players, team, teamName, onRegister, onUnregister, playerRegi
                     </button>
                 )}
             </div>
-            <p className={styles.teamName}>{teamName}</p>
+            {isEditingName ? (
+                <input
+                    type="text"
+                    value={teamName}
+                    onChange={(e) => onTeamNameUpdate(team, e.target.value)}
+                    onBlur={() => setIsEditingName(false)}
+                    onKeyPress={(e) => {
+                        if (e.key === 'Enter') {
+                            setIsEditingName(false);
+                        }
+                    }}
+                    autoFocus
+                    className={styles.teamNameInput}
+                />
+            ) : (
+                <p
+                    className={styles.teamName}
+                    onDoubleClick={() => setIsEditingName(true)}
+                    style={{ cursor: 'pointer' }}
+                    title="Double-click to edit"
+                >
+                    {teamName}
+                </p>
+            )}
         </div>
     );
 }
@@ -76,6 +111,8 @@ const GameOneScreen = ({ gameId }) => {
     const [currentPlayer, setCurrentPlayer] = useState(null);
     const [timeInfo, setTimeInfo] = useState('');
     const [isEditingName, setIsEditingName] = useState(false);
+    const [isEditingTeam1Name, setIsEditingTeam1Name] = useState(false);
+    const [isEditingTeam2Name, setIsEditingTeam2Name] = useState(false);
 
     useEffect(() => {
         fetchCurrentPlayer();
@@ -183,6 +220,36 @@ const GameOneScreen = ({ gameId }) => {
         }
     }
 
+    const handleTeamNameUpdate = (team, newName) => {
+        // Update the local state with the new team name
+        setGameDetails(prevDetails => ({
+            ...prevDetails,
+            [team === 'team_1' ? 'team_1_name' : 'team_2_name']: newName
+        }));
+
+        // Call handleSubmit to persist the change
+        handleSubmit(team, newName);
+    };
+
+    const handleSubmit = async (team, newName) => {
+        // Prepare the update object
+        const updateData = team === 'team_1' ? { team_1_name: newName } : { team_2_name: newName };
+
+        // Update the corresponding team name in the database
+        const { data, error } = await supabase
+            .from('games')
+            .update(updateData)
+            .eq('id', gameId);
+
+        if (error) {
+            console.error('Error updating team names:', error);
+        } else {
+            console.log('Team names updated successfully');
+            // Optionally refetch game details if you want to ensure UI consistency
+            fetchGameDetails();
+        }
+    };
+
     if (!gameDetails) return <div>Loading...</div>;
 
     const team1Players = gameDetails.games_players.filter(p => p.team === 'team_1');
@@ -235,6 +302,9 @@ const GameOneScreen = ({ gameId }) => {
                         playerRegistered={playerRegistered}
                         isClickable={!playerRegistered || playerRegistered === 'team_1'}
                         isGameFinished={isGameFinished}
+                        isEditingName={isEditingTeam1Name}
+                        setIsEditingName={setIsEditingTeam1Name}
+                        onTeamNameUpdate={handleTeamNameUpdate}
                     />
                     <TeamBox
                         players={team2Players.map(p => p.players)}
@@ -245,6 +315,9 @@ const GameOneScreen = ({ gameId }) => {
                         playerRegistered={playerRegistered}
                         isClickable={!playerRegistered || playerRegistered === 'team_2'}
                         isGameFinished={isGameFinished}
+                        isEditingName={isEditingTeam2Name}
+                        setIsEditingName={setIsEditingTeam2Name}
+                        onTeamNameUpdate={handleTeamNameUpdate}
                     />
                 </div>
             </div>
