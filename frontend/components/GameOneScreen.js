@@ -2,7 +2,25 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
 import styles from '../styles/GameOneScreen.module.css';
 import Layout from '../components/Layout';
-import { formatDistanceToNow, parseISO, addHours } from 'date-fns';
+import { formatDistanceToNow, parseISO, addHours, addMinutes } from 'date-fns';
+
+function convertUTCToGMT8(dateString, timeString) {
+    // Combine date and time strings into a single ISO 8601 string
+    const dateTimeString = `${dateString}T${timeString}Z`; // Add 'Z' to indicate UTC
+    const dateObject = new Date(dateTimeString);
+
+    // Create a new Date object for GMT+8
+    const localTime = new Date(dateObject.getTime());
+
+    return localTime.toLocaleString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        hour: 'numeric',
+        minute: 'numeric',
+        second: 'numeric',
+    });
+}
 
 export function updateTimeInfo(gameDetails) {
     const now = new Date();
@@ -23,11 +41,17 @@ export function updateTimeInfo(gameDetails) {
             return `Started ${timeString}`;
         }
     } else if (gameDetails.status === 'finished') {
-        return `Ended ${timeString}`;
+        // Convert game duration from minutes to hours and calculate end time
+        const gameDurationMinutes = gameDetails.duration || 0; // duration in minutes
+        const endTime = addMinutes(gameTimeLocal, gameDurationMinutes);
+
+        const endTimeString = formatDistanceToNow(endTime, { addSuffix: true });
+        return `Ended about ${endTimeString}`;
     }
 
     return timeString;
 }
+
 
 function TeamBox({
     players,
@@ -120,7 +144,6 @@ const GameOneScreen = ({ gameId }) => {
     const [playerRegistered, setPlayerRegistered] = useState(null);
     const [currentPlayer, setCurrentPlayer] = useState(null);
     const [timeInfo, setTimeInfo] = useState('');
-    const [isEditingName, setIsEditingName] = useState(false);
     const [isEditingGameName, setIsEditingGameName] = useState(false);
     const [editedGameName, setEditedGameName] = useState('');
 
@@ -254,30 +277,14 @@ const GameOneScreen = ({ gameId }) => {
         }
     };
 
-    const handleSubmit = async (team, newName) => {
-        // Prepare the update object
-        const updateData = team === 'team_1' ? { team_1_name: newName } : { team_2_name: newName };
-
-        // Update the corresponding team name in the database
-        const { data, error } = await supabase
-            .from('games')
-            .update(updateData)
-            .eq('id', gameId);
-
-        if (error) {
-            console.error('Error updating team names:', error);
-        } else {
-            console.log('Team names updated successfully');
-            // Optionally refetch game details if you want to ensure UI consistency
-            fetchGameDetails();
-        }
-    };
-
     if (!gameDetails) return <div>Loading...</div>;
 
     const team1Players = gameDetails.games_players.filter(p => p.team === 'team_1');
     const team2Players = gameDetails.games_players.filter(p => p.team === 'team_2');
     const isGameFinished = gameDetails.status === 'finished';
+
+    // Convert game date and time from UTC to GMT+8
+    const formattedDateTime = convertUTCToGMT8(gameDetails.date, gameDetails.time);
 
     return (
         <Layout>
@@ -310,7 +317,7 @@ const GameOneScreen = ({ gameId }) => {
                         </h2>
                     )}
                     <p className={styles.courtInfo}>
-                        {gameDetails.courts.name} ({new Date(`${gameDetails.date}T${gameDetails.time}`).toLocaleString()})
+                        {gameDetails.courts.name} ({formattedDateTime})
                     </p>
                     <p className={styles.timeInfo}>{timeInfo}</p>
                     <span className={styles.statusBadge}>
