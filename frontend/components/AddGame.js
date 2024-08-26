@@ -14,6 +14,9 @@ export default function AddGame() {
     const [error, setError] = useState('');
     const [success, setSuccess] = useState('');
     const router = useRouter();
+    const [duration, setDuration] = useState('');
+    const [gameName, setGameName] = useState('New Game');
+    const [isEditingName, setIsEditingName] = useState(false);
 
     useEffect(() => {
         const fetchPlayerAndCourts = async () => {
@@ -82,10 +85,12 @@ export default function AddGame() {
             .from('games')
             .insert([{
                 court_id: courtId,
-                date: utcDate, // Store the date in UTC
-                time: utcTime, // Store the time in UTC
-                status: 'open', // Set status to 'open' by default
-                created_by: player.id
+                date: utcDate,
+                time: utcTime,
+                duration: parseInt(duration),
+                status: 'open',
+                created_by: player.id,
+                game_name: gameName  // Changed from 'name' to 'game_name'
             }]);
 
         if (error) {
@@ -93,6 +98,10 @@ export default function AddGame() {
             setError('Failed to add game. Please try again.');
         } else {
             setSuccess('Game added successfully!');
+            setCourtId('');
+            setDate('');
+            setTime('');
+            setDuration(''); // Add this line
             setTimeout(() => router.push('/GameManyScreen'), 2000);
         }
     }
@@ -106,10 +115,36 @@ export default function AddGame() {
             <div className={`${styles.gameScreen} ${styles.openGame}`}>
                 <div className={styles.gameInfo}>
                     <h2>Add New Game</h2>
-                    <p className={styles.gameNumber}>New Game</p>
-                    <span className={styles.statusBadge}>
-                        Creating
-                    </span>
+                    <h3 className={styles.gameName}>
+                        {isEditingName ? (
+                            <input
+                                type="text"
+                                value={gameName}
+                                onChange={(e) => setGameName(e.target.value)}
+                                onBlur={() => setIsEditingName(false)}
+                                onKeyPress={(e) => {
+                                    if (e.key === 'Enter') {
+                                        setIsEditingName(false);
+                                    }
+                                }}
+                                autoFocus
+                                className={styles.gameNameInput}
+                            />
+                        ) : (
+                            <span
+                                style={{
+                                    cursor: 'pointer',
+                                    borderBottom: '2px dashed #666',
+                                    padding: '0 4px'
+                                }}
+                                title="Double-click to edit"
+                                onDoubleClick={() => setIsEditingName(true)}
+                            >
+                                {gameName}
+                            </span>
+                        )}
+                    </h3>
+
                 </div>
 
                 <div className={`${styles.teamsContainer} ${formStyles.formContainer}`}>
@@ -138,6 +173,17 @@ export default function AddGame() {
                             <option value="">Select a time</option>
                             {generateTimeOptions().map(option => (
                                 <option key={option} value={option}>{option}</option>
+                            ))}
+                        </select>
+
+                        <select
+                            value={duration}
+                            onChange={(e) => setDuration(e.target.value)}
+                            required
+                        >
+                            <option value="">Select duration</option>
+                            {[1, 2, 3, 4, 5].map(hour => (
+                                <option key={hour} value={hour}>{hour} hour{hour > 1 ? 's' : ''}</option>
                             ))}
                         </select>
                         <button type="submit">Add Game</button>

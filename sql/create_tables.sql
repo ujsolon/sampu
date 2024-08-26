@@ -42,9 +42,11 @@ CREATE TABLE games (
 -- Create games_players table with team constraint
 CREATE TABLE games_players (
   id SERIAL NOT NULL PRIMARY KEY,
-  game_id INTEGER REFERENCES games (id),
+  game_id INTEGER
   player_id INTEGER REFERENCES players (id),
   team TEXT,
   CONSTRAINT check_team CHECK (team IN ('team_1', 'team_2', 'substitute'))
   CONSTRAINT unique_game_player UNIQUE (game_id, player_id);
+  ADD CONSTRAINT games_players_game_id_fkey
+  FOREIGN KEY (game_id) REFERENCES games (id) ON DELETE CASCADE;
 );
