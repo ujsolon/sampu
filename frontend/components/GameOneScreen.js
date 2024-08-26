@@ -2,15 +2,22 @@ import React, { useEffect, useState } from 'react';
 import { supabase } from '../utils/supabase';
 import styles from '../styles/GameOneScreen.module.css';
 import Layout from '../components/Layout';
-import { formatDistanceToNow } from 'date-fns';
+import { formatDistanceToNow, parseISO, addHours } from 'date-fns';
 
 export function updateTimeInfo(gameDetails) {
     const now = new Date();
-    const gameTime = new Date(`${gameDetails.date}T${gameDetails.time}`);
-    const timeString = formatDistanceToNow(gameTime, { addSuffix: true });
+
+    // Parse the UTC date and time from the database
+    const gameTimeUTC = parseISO(`${gameDetails.date}T${gameDetails.time}`);
+
+    // Convert UTC to local time
+    const userTimezoneOffset = new Date().getTimezoneOffset() / 60;
+    const gameTimeLocal = addHours(gameTimeUTC, -userTimezoneOffset);
+
+    const timeString = formatDistanceToNow(gameTimeLocal, { addSuffix: true });
 
     if (gameDetails.status === 'open') {
-        if (gameTime > now) {
+        if (gameTimeLocal > now) {
             return `Starting ${timeString}`;
         } else {
             return `Started ${timeString}`;
