@@ -176,8 +176,10 @@ const GameOneScreen = ({ gameId }) => {
         <Layout>
             <div className={`${styles.gameScreen} ${isGameFinished ? styles.finishedGame : styles.openGame}`}>
                 <div className={styles.gameInfo}>
-                    <h2>{gameDetails.courts.name}</h2>
-                    <p className={styles.gameNumber}>Game #{gameDetails.id}</p>
+                    <h2>{gameDetails.game_name}</h2>
+                    <p className={styles.courtInfo}>
+                        {gameDetails.courts.name} ({new Date(`${gameDetails.date}T${gameDetails.time}`).toLocaleString()})
+                    </p>
                     <p className={styles.timeInfo}>{timeInfo}</p>
                     <span className={styles.statusBadge}>
                         {gameDetails.status.charAt(0).toUpperCase() + gameDetails.status.slice(1)}
