@@ -1,13 +1,14 @@
 import { useState, useEffect } from 'react';
 import { useRouter } from 'next/router';
 import { supabase } from '../utils/supabase';
-import styles from '../styles/AddGame.module.css';
+import styles from '../styles/GameOneScreen.module.css';
+import formStyles from '../styles/AddGame.module.css';
+import Layout from '../components/Layout';
 
 export default function AddGame() {
     const [courtId, setCourtId] = useState('');
     const [date, setDate] = useState('');
     const [time, setTime] = useState('');
-    const [status, setStatus] = useState('open');
     const [player, setPlayer] = useState(null);
     const [courts, setCourts] = useState([]);
     const [error, setError] = useState('');
@@ -71,7 +72,7 @@ export default function AddGame() {
         const localDateTime = new Date(localDateTimeString);
 
         // Convert to UTC
-        const utcDateTime = new Date(localDateTime.toISOString());
+        const utcDateTime = new Date(localDateTime.toUTCString());
 
         // Split date and time in ISO format
         const utcDate = utcDateTime.toISOString().split('T')[0];
@@ -83,7 +84,7 @@ export default function AddGame() {
                 court_id: courtId,
                 date: utcDate, // Store the date in UTC
                 time: utcTime, // Store the time in UTC
-                status,
+                status: 'open', // Set status to 'open' by default
                 created_by: player.id
             }]);
 
@@ -101,45 +102,61 @@ export default function AddGame() {
     }
 
     return (
-        <div className={styles.formContainer}>
-            <h1>Add Game</h1>
-            {error && <p className={styles.error}>{error}</p>}
-            {success && <p className={styles.success}>{success}</p>}
-            <form onSubmit={handleSubmit}>
-                <select
-                    value={courtId}
-                    onChange={(e) => setCourtId(e.target.value)}
-                    required
-                >
-                    <option value="">Select a court</option>
-                    {courts.map(court => (
-                        <option key={court.id} value={court.id}>{court.name}</option>
-                    ))}
-                </select>
-                <input
-                    type="date"
-                    value={date}
-                    onChange={(e) => setDate(e.target.value)}
-                    required
-                />
-                <input
-                    type="time"
-                    value={time}
-                    onChange={(e) => setTime(e.target.value)}
-                    required
-                />
-                <select
-                    value={status}
-                    onChange={(e) => setStatus(e.target.value)}
-                    required
-                >
-                    <option value="open">Open</option>
-                    <option value="in_progress">In Progress</option>
-                    <option value="finished">Finished</option>
-                    <option value="cancelled">Cancelled</option>
-                </select>
-                <button type="submit">Add Game</button>
-            </form>
-        </div>
+        <Layout>
+            <div className={`${styles.gameScreen} ${styles.openGame}`}>
+                <div className={styles.gameInfo}>
+                    <h2>Add New Game</h2>
+                    <p className={styles.gameNumber}>New Game</p>
+                    <span className={styles.statusBadge}>
+                        Creating
+                    </span>
+                </div>
+
+                <div className={`${styles.teamsContainer} ${formStyles.formContainer}`}>
+                    <form onSubmit={handleSubmit} className={formStyles.addGameForm}>
+                        <select
+                            value={courtId}
+                            onChange={(e) => setCourtId(e.target.value)}
+                            required
+                        >
+                            <option value="">Select a court</option>
+                            {courts.map(court => (
+                                <option key={court.id} value={court.id}>{court.name}</option>
+                            ))}
+                        </select>
+                        <input
+                            type="date"
+                            value={date}
+                            onChange={(e) => setDate(e.target.value)}
+                            required
+                        />
+                        <select
+                            value={time}
+                            onChange={(e) => setTime(e.target.value)}
+                            required
+                        >
+                            <option value="">Select a time</option>
+                            {generateTimeOptions().map(option => (
+                                <option key={option} value={option}>{option}</option>
+                            ))}
+                        </select>
+                        <button type="submit">Add Game</button>
+                    </form>
+                </div>
+                {error && <p className={formStyles.error}>{error}</p>}
+                {success && <p className={formStyles.success}>{success}</p>}
+            </div>
+        </Layout>
     );
+}
+
+function generateTimeOptions() {
+    const options = [];
+    for (let hour = 0; hour < 24; hour++) {
+        for (let minute = 0; minute < 60; minute += 30) {
+            const time = `${hour.toString().padStart(2, '0')}:${minute.toString().padStart(2, '0')}`;
+            options.push(time);
+        }
+    }
+    return options;
 }
