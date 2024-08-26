@@ -38,11 +38,21 @@ function TeamBox({
     playerRegistered,
     isClickable,
     isGameFinished,
-    isEditingName,
-    setIsEditingName,
     onTeamNameUpdate
 }) {
+    const [isEditingName, setIsEditingName] = useState(false);
+    const [editedTeamName, setEditedTeamName] = useState(teamName);
+
     const teamClass = team === 'team_1' ? styles.team1 : styles.team2;
+
+    const handleNameChange = (e) => {
+        setEditedTeamName(e.target.value);
+    };
+
+    const handleNameUpdate = () => {
+        onTeamNameUpdate(team, editedTeamName);
+        setIsEditingName(false);
+    };
 
     return (
         <div className={styles.teamBoxWrapper}>
@@ -80,12 +90,12 @@ function TeamBox({
             {isEditingName ? (
                 <input
                     type="text"
-                    value={teamName}
-                    onChange={(e) => onTeamNameUpdate(team, e.target.value)}
-                    onBlur={() => setIsEditingName(false)}
+                    value={editedTeamName}
+                    onChange={handleNameChange}
+                    onBlur={handleNameUpdate}
                     onKeyPress={(e) => {
                         if (e.key === 'Enter') {
-                            setIsEditingName(false);
+                            handleNameUpdate();
                         }
                     }}
                     autoFocus
@@ -98,7 +108,7 @@ function TeamBox({
                     style={{ cursor: 'pointer' }}
                     title="Double-click to edit"
                 >
-                    {teamName}
+                    {teamName || 'Team Name'}
                 </p>
             )}
         </div>
@@ -111,8 +121,8 @@ const GameOneScreen = ({ gameId }) => {
     const [currentPlayer, setCurrentPlayer] = useState(null);
     const [timeInfo, setTimeInfo] = useState('');
     const [isEditingName, setIsEditingName] = useState(false);
-    const [isEditingTeam1Name, setIsEditingTeam1Name] = useState(false);
-    const [isEditingTeam2Name, setIsEditingTeam2Name] = useState(false);
+    const [isEditingGameName, setIsEditingGameName] = useState(false);
+    const [editedGameName, setEditedGameName] = useState('');
 
     useEffect(() => {
         fetchCurrentPlayer();
@@ -207,28 +217,41 @@ const GameOneScreen = ({ gameId }) => {
         }
     }
 
-    async function handleGameNameUpdate(newName) {
+    const handleGameNameChange = (e) => {
+        setEditedGameName(e.target.value);
+    };
+
+    const handleGameNameUpdate = async () => {
         const { data, error } = await supabase
             .from('games')
-            .update({ game_name: newName })
+            .update({ game_name: editedGameName })
             .eq('id', gameId);
 
-        if (error) console.error('Error updating game name:', error);
-        else {
-            setGameDetails({ ...gameDetails, game_name: newName });
-            setIsEditingName(false);
+        if (error) {
+            console.error('Error updating game name:', error);
+        } else {
+            setGameDetails(prevDetails => ({ ...prevDetails, game_name: editedGameName }));
+            setIsEditingGameName(false);
         }
-    }
+    };
 
-    const handleTeamNameUpdate = (team, newName) => {
-        // Update the local state with the new team name
-        setGameDetails(prevDetails => ({
-            ...prevDetails,
-            [team === 'team_1' ? 'team_1_name' : 'team_2_name']: newName
-        }));
+    const handleTeamNameUpdate = async (team, newName) => {
+        const updateData = team === 'team_1' ? { team_1_name: newName } : { team_2_name: newName };
 
-        // Call handleSubmit to persist the change
-        handleSubmit(team, newName);
+        const { data, error } = await supabase
+            .from('games')
+            .update(updateData)
+            .eq('id', gameId);
+
+        if (error) {
+            console.error('Error updating team name:', error);
+        } else {
+            console.log('Team name updated successfully');
+            setGameDetails(prevDetails => ({
+                ...prevDetails,
+                [team === 'team_1' ? 'team_1_name' : 'team_2_name']: newName
+            }));
+        }
     };
 
     const handleSubmit = async (team, newName) => {
@@ -260,15 +283,15 @@ const GameOneScreen = ({ gameId }) => {
         <Layout>
             <div className={`${styles.gameScreen} ${isGameFinished ? styles.finishedGame : styles.openGame}`}>
                 <div className={styles.gameInfo}>
-                    {isEditingName ? (
+                    {isEditingGameName ? (
                         <input
                             type="text"
-                            value={gameDetails.game_name}
-                            onChange={(e) => setGameDetails({ ...gameDetails, game_name: e.target.value })}
-                            onBlur={() => handleGameNameUpdate(gameDetails.game_name)}
+                            value={editedGameName}
+                            onChange={handleGameNameChange}
+                            onBlur={handleGameNameUpdate}
                             onKeyPress={(e) => {
                                 if (e.key === 'Enter') {
-                                    handleGameNameUpdate(gameDetails.game_name);
+                                    handleGameNameUpdate();
                                 }
                             }}
                             autoFocus
@@ -276,11 +299,14 @@ const GameOneScreen = ({ gameId }) => {
                         />
                     ) : (
                         <h2
-                            onDoubleClick={() => setIsEditingName(true)}
+                            onDoubleClick={() => {
+                                setEditedGameName(gameDetails.game_name || '');
+                                setIsEditingGameName(true);
+                            }}
                             style={{ cursor: 'pointer' }}
                             title="Double-click to edit"
                         >
-                            {gameDetails.game_name}
+                            {gameDetails.game_name || 'Game Name'}
                         </h2>
                     )}
                     <p className={styles.courtInfo}>
@@ -302,8 +328,6 @@ const GameOneScreen = ({ gameId }) => {
                         playerRegistered={playerRegistered}
                         isClickable={!playerRegistered || playerRegistered === 'team_1'}
                         isGameFinished={isGameFinished}
-                        isEditingName={isEditingTeam1Name}
-                        setIsEditingName={setIsEditingTeam1Name}
                         onTeamNameUpdate={handleTeamNameUpdate}
                     />
                     <TeamBox
@@ -315,8 +339,6 @@ const GameOneScreen = ({ gameId }) => {
                         playerRegistered={playerRegistered}
                         isClickable={!playerRegistered || playerRegistered === 'team_2'}
                         isGameFinished={isGameFinished}
-                        isEditingName={isEditingTeam2Name}
-                        setIsEditingName={setIsEditingTeam2Name}
                         onTeamNameUpdate={handleTeamNameUpdate}
                     />
                 </div>

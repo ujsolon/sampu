@@ -486,12 +486,19 @@
     /* Other existing styles remain the same */
 }
 
+.teamNameContainer {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
 .teamName {
     margin-top: 10px;
     font-weight: bold;
     font-size: 1.2em;
     text-align: center;
     width: 100%;
+    margin-right: 5px;
 }
 
 .teamNameInput {

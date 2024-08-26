@@ -17,6 +17,8 @@ export default function AddGame() {
     const [duration, setDuration] = useState('');
     const [gameName, setGameName] = useState('New Game');
     const [isEditingName, setIsEditingName] = useState(false);
+    const [customDuration, setCustomDuration] = useState(''); // New state for custom duration
+    const [durationType, setDurationType] = useState('hours'); // State to handle duration type (hours or minutes)
 
     useEffect(() => {
         const fetchPlayerAndCourts = async () => {
@@ -81,16 +83,24 @@ export default function AddGame() {
         const utcDate = utcDateTime.toISOString().split('T')[0];
         const utcTime = utcDateTime.toISOString().split('T')[1].slice(0, 8);
 
+        // Convert duration to minutes
+        let durationInMinutes;
+        if (durationType === 'hours') {
+            durationInMinutes = parseInt(duration) * 60; // Convert hours to minutes
+        } else {
+            durationInMinutes = parseInt(customDuration); // Use custom duration in minutes
+        }
+
         const { data, error } = await supabase
             .from('games')
             .insert([{
                 court_id: courtId,
                 date: utcDate,
                 time: utcTime,
-                duration: parseInt(duration),
+                duration: durationInMinutes,
                 status: 'open',
                 created_by: player.id,
-                game_name: gameName  // Changed from 'name' to 'game_name'
+                game_name: gameName
             }]);
 
         if (error) {
@@ -101,7 +111,8 @@ export default function AddGame() {
             setCourtId('');
             setDate('');
             setTime('');
-            setDuration(''); // Add this line
+            setDuration('');
+            setCustomDuration(''); // Reset custom duration
             setTimeout(() => router.push('/GameManyScreen'), 2000);
         }
     }
@@ -144,7 +155,6 @@ export default function AddGame() {
                             </span>
                         )}
                     </h3>
-
                 </div>
 
                 <div className={`${styles.teamsContainer} ${formStyles.formContainer}`}>
@@ -177,15 +187,27 @@ export default function AddGame() {
                         </select>
 
                         <select
-                            value={duration}
-                            onChange={(e) => setDuration(e.target.value)}
+                            value={durationType}
+                            onChange={(e) => setDurationType(e.target.value)}
                             required
                         >
-                            <option value="">Select duration</option>
+                            <option value="hours">Select duration in hours</option>
                             {[1, 2, 3, 4, 5].map(hour => (
                                 <option key={hour} value={hour}>{hour} hour{hour > 1 ? 's' : ''}</option>
                             ))}
+                            <option value="minutes">Other (in minutes)</option>
                         </select>
+
+                        {durationType === 'minutes' && (
+                            <input
+                                type="number"
+                                placeholder="Enter duration in minutes"
+                                value={customDuration}
+                                onChange={(e) => setCustomDuration(e.target.value)}
+                                required
+                            />
+                        )}
+
                         <button type="submit">Add Game</button>
                     </form>
                 </div>
