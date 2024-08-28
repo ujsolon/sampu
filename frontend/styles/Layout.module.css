@@ -3,7 +3,7 @@
 /* Layout container */
 .layout {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     height: 100vh;
     overflow: hidden;
 }
@@ -12,8 +12,13 @@
 .main {
     flex: 1;
     overflow-y: auto;
+    padding: 20px;
+    margin-left: 60px;
+    /* Adjust to match the width of the nav */
     padding-bottom: 60px;
     /* Space for fixed nav */
+    box-sizing: border-box;
+    /* Include padding in the element's total width and height */
 }
 
 /* Navigation bar */
@@ -70,6 +75,11 @@
 
 /* Responsive adjustments */
 @media (max-width: 768px) {
+    .layout {
+        flex-direction: column;
+        /* Switch to column layout on smaller screens */
+    }
+
     .nav {
         flex-direction: row;
         height: auto;
@@ -82,7 +92,10 @@
         flex-direction: row;
     }
 
-    .navItem {
-        padding: 10px 0;
+    .main {
+        padding: 10px;
+        /* Adjust padding for smaller screens */
+        padding-bottom: 60px;
+        /* Maintain space for nav */
     }
 }

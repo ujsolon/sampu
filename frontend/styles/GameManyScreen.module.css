@@ -2,13 +2,18 @@
     padding: 20px;
     max-width: 1200px;
     margin: 0 auto;
+    width: 100%;
     font-family: Arial, sans-serif;
+    box-sizing: border-box;
+    /* Include padding and border in element's total width and height */
 }
 
 .screenH2 {
     font-size: 2.5em;
     margin-bottom: 20px;
     color: #333;
+    word-wrap: break-word;
+    /* Prevent text overflow */
 }
 
 .addButton {
@@ -32,6 +37,8 @@
     flex-wrap: wrap;
     gap: 20px;
     justify-content: flex-start;
+    box-sizing: border-box;
+    /* Include padding and border in element's total width and height */
 }
 
 .gameCard {
@@ -43,6 +50,8 @@
     border-radius: 8px;
     padding: 15px;
     transition: box-shadow 0.3s ease, transform 0.3s ease;
+    box-sizing: border-box;
+    /* Include padding and border in element's total width and height */
 }
 
 .gameCard:hover {
@@ -54,6 +63,8 @@
     color: #333;
     margin-bottom: 15px;
     font-size: 1.8em;
+    word-wrap: break-word;
+    /* Prevent text overflow */
 }
 
 .noGamesMessage {
@@ -92,6 +103,7 @@
 }
 
 /* Responsive design */
+/* Responsive design */
 @media (max-width: 768px) {
     .gameList {
         justify-content: center;
@@ -99,5 +111,38 @@
 
     .gameCard {
         max-width: 100%;
+        /* Ensure game cards use full width */
+    }
+
+    .gameScreen {
+        padding: 10px;
+        /* Reduce padding on smaller screens */
+    }
+
+    .screenH2 {
+        font-size: 2em;
+        /* Adjust font size for smaller screens */
+    }
+
+    .sectionTitle {
+        font-size: 1.5em;
+        /* Adjust font size for smaller screens */
+    }
+}
+
+@media (max-width: 480px) {
+    .screenH2 {
+        font-size: 1.8em;
+        /* Further adjust heading size for very small screens */
+    }
+
+    .sectionTitle {
+        font-size: 1.2em;
+        /* Further adjust section title size for very small screens */
+    }
+
+    .addButton {
+        padding: 6px 12px;
+        /* Further adjust button padding for very small screens */
     }
 }
