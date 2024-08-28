@@ -103,25 +103,27 @@
 }
 
 /* Responsive design */
-/* Responsive design */
 @media (max-width: 768px) {
+    .gameScreen {
+        padding: 10px;
+        /* Reduced padding for mobile view */
+        margin: 0;
+        /* Remove any automatic margins */
+    }
+
+    .screenH2 {
+        font-size: 1.8em;
+        /* Smaller font size for mobile */
+        margin-bottom: 10px;
+        /* Reduced margin for mobile view */
+    }
+
     .gameList {
         justify-content: center;
     }
 
     .gameCard {
         max-width: 100%;
-        /* Ensure game cards use full width */
-    }
-
-    .gameScreen {
-        padding: 10px;
-        /* Reduce padding on smaller screens */
-    }
-
-    .screenH2 {
-        font-size: 2em;
-        /* Adjust font size for smaller screens */
     }
 
     .sectionTitle {
