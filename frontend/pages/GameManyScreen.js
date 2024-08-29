@@ -5,15 +5,10 @@ import styles from '../styles/GameManyScreen.module.css';
 import Link from 'next/link';
 import Layout from '../components/Layout';
 
-function getTimeDifference(gameDate, gameTime) {
-    const gameDateTime = new Date(`${gameDate}T${gameTime}`);
-    const currentDateTime = new Date();
-    return Math.abs(gameDateTime - currentDateTime);
-}
-
 export default function GameManyScreen() {
-    const [myGames, setMyGames] = useState([]);
-    const [otherGames, setOtherGames] = useState([]);
+    const [myUpcomingGames, setMyUpcomingGames] = useState([]);
+    const [myPreviousGames, setMyPreviousGames] = useState([]);
+    const [otherOpenGames, setOtherOpenGames] = useState([]);
     const [player, setPlayer] = useState(null);
 
     useEffect(() => {
@@ -58,19 +53,23 @@ export default function GameManyScreen() {
                 return;
             }
 
-            // Sort games by their proximity to the current datetime
-            allGamesData.sort((a, b) => {
-                return getTimeDifference(a.date, a.time) - getTimeDifference(b.date, b.time);
-            });
+            const now = new Date();
 
-            // Get the 6 closest games
-            const closestGames = allGamesData.slice(0, 6);
+            const myUpcoming = allGamesData
+                .filter(game => myGameIds.includes(game.id) && game.status === 'open' || game.status === 'in_progress')
+                .sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
 
-            const myGamesData = closestGames.filter(game => myGameIds.includes(game.id));
-            const otherGamesData = closestGames.filter(game => !myGameIds.includes(game.id));
+            const myPrevious = allGamesData
+                .filter(game => myGameIds.includes(game.id) && game.status === 'finished')
+                .sort((a, b) => new Date(`${b.date}T${b.time}`) - new Date(`${a.date}T${a.time}`));
 
-            setMyGames(myGamesData);
-            setOtherGames(otherGamesData);
+            const otherOpen = allGamesData
+                .filter(game => !myGameIds.includes(game.id) && game.status === 'open')
+                .sort((a, b) => new Date(`${a.date}T${a.time}`) - new Date(`${b.date}T${b.time}`));
+
+            setMyUpcomingGames(myUpcoming);
+            setMyPreviousGames(myPrevious);
+            setOtherOpenGames(otherOpen);
         } else {
             console.error('No authenticated user');
         }
@@ -83,37 +82,52 @@ export default function GameManyScreen() {
                 <Link href="/add-game" className={styles.addButton}>Add Game</Link>
 
                 <section>
-                    <h2 className={styles.sectionTitle}>My Games</h2>
+                    <h2 className={styles.sectionTitle}>My Upcoming Games</h2>
                     <div className={styles.gameList}>
-                        {myGames.length > 0 ? (
-                            myGames.map(game => (
+                        {myUpcomingGames.length > 0 ? (
+                            myUpcomingGames.map(game => (
                                 <GameCard
                                     key={game.id}
                                     game={game}
-                                    className={`${styles.gameCard} ${game.status === 'finished' ? styles.finishedGame : styles.openGame}`}
-                                    grayedOut={game.status === 'closed'}
+                                    className={`${styles.gameCard} ${styles.openGame}`}
                                 />
                             ))
                         ) : (
-                            <p className={styles.noGamesMessage}>No games available.</p>
+                            <p className={styles.noGamesMessage}>No upcoming games available.</p>
                         )}
                     </div>
                 </section>
 
                 <section>
-                    <h2 className={styles.sectionTitle}>Other Games</h2>
+                    <h2 className={styles.sectionTitle}>My Previous Games</h2>
                     <div className={styles.gameList}>
-                        {otherGames.length > 0 ? (
-                            otherGames.map(game => (
+                        {myPreviousGames.length > 0 ? (
+                            myPreviousGames.map(game => (
                                 <GameCard
                                     key={game.id}
                                     game={game}
-                                    className={`${styles.gameCard} ${game.status === 'finished' ? styles.finishedGame : styles.openGame}`}
-                                    grayedOut={game.status === 'closed'}
+                                    className={`${styles.gameCard} ${styles.finishedGame}`}
                                 />
                             ))
                         ) : (
-                            <p className={styles.noGamesMessage}>No games available.</p>
+                            <p className={styles.noGamesMessage}>No previous games available.</p>
+                        )}
+                    </div>
+                </section>
+
+                <section>
+                    <h2 className={styles.sectionTitle}>Other Open Games</h2>
+                    <div className={styles.gameList}>
+                        {otherOpenGames.length > 0 ? (
+                            otherOpenGames.map(game => (
+                                <GameCard
+                                    key={game.id}
+                                    game={game}
+                                    className={`${styles.gameCard} ${styles.openGame}`}
+                                />
+                            ))
+                        ) : (
+                            <p className={styles.noGamesMessage}>No other open games available.</p>
                         )}
                     </div>
                 </section>
