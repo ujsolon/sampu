@@ -148,3 +148,26 @@
         /* Further adjust button padding for very small screens */
     }
 }
+
+.gameName {
+    font-size: 1.2em;
+    font-weight: bold;
+    margin-bottom: 5px;
+}
+
+.courtInfo {
+    font-size: 0.9em;
+    color: #666;
+}
+
+.dateTime {
+    font-size: 0.9em;
+    color: #333;
+    margin-top: 5px;
+}
+
+.timeInfo {
+    font-size: 0.9em;
+    color: #0070f3;
+    margin-top: 5px;
+}

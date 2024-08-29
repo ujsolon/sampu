@@ -289,6 +289,7 @@ const GameOneScreen = ({ gameId }) => {
     return (
         <Layout>
             <div className={`${styles.gameScreen} ${isGameFinished ? styles.finishedGame : styles.openGame}`}>
+                <div className={styles.gameId}>#{gameDetails.id}</div>
                 <div className={styles.gameInfo}>
                     {isEditingGameName ? (
                         <input

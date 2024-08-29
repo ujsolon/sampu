@@ -15,9 +15,10 @@ function GameCard({ game }) {
         <Link href={`/game/${game.id}`} className={styles.gameCardLink}>
             <div className={cardClassName}>
                 <div className={styles.gameId}>#{game.id}</div>
-                <h3>Court {game.court_id}</h3>
-                <p>{timeInfo}</p>
-                <p className={styles.status}>{game.status.charAt(0).toUpperCase() + game.status.slice(1)}</p>
+                <h3 className={styles.gameName}>{game.game_name || 'Game Name'}</h3>
+                <p className={styles.courtInfo}>{game.courts.name}</p>
+                <p className={styles.dateTime}>{new Date(game.date + 'T' + game.time).toLocaleString()}</p>
+                <p className={styles.timeInfo}>{timeInfo}</p>
             </div>
         </Link>
     );
