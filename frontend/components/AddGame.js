@@ -20,6 +20,7 @@ export default function AddGame() {
     const [customDuration, setCustomDuration] = useState(''); // New state for custom duration
     const [durationType, setDurationType] = useState('hours'); // State to handle duration type (hours or minutes)
 
+
     useEffect(() => {
         const fetchPlayerAndCourts = async () => {
             const { data: { user } } = await supabase.auth.getUser();
@@ -83,12 +84,11 @@ export default function AddGame() {
         const utcDate = utcDateTime.toISOString().split('T')[0];
         const utcTime = utcDateTime.toISOString().split('T')[1].slice(0, 8);
 
-        // Convert duration to minutes
         let durationInMinutes;
-        if (durationType === 'hours') {
-            durationInMinutes = parseInt(duration) * 60; // Convert hours to minutes
+        if (duration === 'custom') {
+            durationInMinutes = parseFloat(customDuration) * 60; // Convert hours to minutes
         } else {
-            durationInMinutes = parseInt(customDuration); // Use custom duration in minutes
+            durationInMinutes = parseFloat(duration) * 60; // Convert hours to minutes
         }
 
         const { data, error } = await supabase
@@ -97,7 +97,7 @@ export default function AddGame() {
                 court_id: courtId,
                 date: utcDate,
                 time: utcTime,
-                duration: durationInMinutes,
+                duration: Math.round(durationInMinutes), // Round to nearest minute
                 status: 'open',
                 created_by: player.id,
                 game_name: gameName
@@ -112,7 +112,6 @@ export default function AddGame() {
             setDate('');
             setTime('');
             setDuration('');
-            setCustomDuration(''); // Reset custom duration
             setTimeout(() => router.push('/GameManyScreen'), 2000);
         }
     }
@@ -187,16 +186,28 @@ export default function AddGame() {
                         </select>
 
                         <select
-                            value={durationType}
-                            onChange={(e) => setDurationType(e.target.value)}
+                            value={duration}
+                            onChange={(e) => setDuration(e.target.value)}
                             required
                         >
-                            <option value="hours">Select duration in hours</option>
-                            {[1, 2, 3, 4, 5].map(hour => (
-                                <option key={hour} value={hour}>{hour} hour{hour > 1 ? 's' : ''}</option>
+                            <option value="">Select duration in hours</option>
+                            {[1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5, 5].map(hour => (
+                                <option key={hour} value={hour}>{hour} hour{hour !== 1 ? 's' : ''}</option>
                             ))}
-                            <option value="minutes">Other (in minutes)</option>
+                            <option value="custom">Other (custom duration)</option>
                         </select>
+
+                        {duration === 'custom' && (
+                            <input
+                                type="number"
+                                step="0.5"
+                                min="0.5"
+                                placeholder="Enter duration in hours"
+                                value={customDuration}
+                                onChange={(e) => setCustomDuration(e.target.value)}
+                                required
+                            />
+                        )}
 
                         {durationType === 'minutes' && (
                             <input

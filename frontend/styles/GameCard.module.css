@@ -49,6 +49,12 @@
     border: 2px solid #1890ff;
 }
 
+.inProgressGame {
+    background-color: rgba(82, 196, 26, 0.1);
+    /* Light green background for in-progress games */
+    border: 2px solid #52c41a;
+}
+
 .finishedGame {
     background-color: rgba(0, 0, 0, 0.05);
     /* Light gray background for finished games */
@@ -79,16 +85,6 @@
     /* Consistent spacing between lines */
     font-size: 0.9em;
     /* Slightly smaller font for descriptions */
-}
-
-.gameCard {
-    /* Existing styles for the game card */
-    padding: 20px;
-    margin: 10px;
-    border-radius: 8px;
-    transition: background-color 0.3s ease, border-color 0.3s ease;
-    text-decoration: none;
-    /* Removes the underline */
 }
 
 /* Remove underline on hover as well */

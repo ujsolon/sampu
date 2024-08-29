@@ -391,6 +391,12 @@
     border: 2px solid #1890ff;
 }
 
+.inProgressGame {
+    background-color: rgba(82, 196, 26, 0.1);
+    /* Light green background for in-progress games */
+    border: 2px solid #52c41a;
+}
+
 .finishedGame {
     background-color: rgba(0, 0, 0, 0.05);
     /* Light gray background for finished games */
@@ -430,8 +436,14 @@
 }
 
 .openGame .statusBadge {
+    background-color: #1890ff;
+    /* Blue for open games */
+    color: white;
+}
+
+.inProgressGame .statusBadge {
     background-color: #52c41a;
-    /* Green for open games */
+    /* Green for in-progress games */
     color: white;
 }
 

@@ -282,13 +282,17 @@ const GameOneScreen = ({ gameId }) => {
     const team1Players = gameDetails.games_players.filter(p => p.team === 'team_1');
     const team2Players = gameDetails.games_players.filter(p => p.team === 'team_2');
     const isGameFinished = gameDetails.status === 'finished';
+    const isGameInProgress = gameDetails.status === 'in_progress';
 
     // Convert game date and time from UTC to GMT+8
     const formattedDateTime = convertUTCToGMT8(gameDetails.date, gameDetails.time);
 
     return (
         <Layout>
-            <div className={`${styles.gameScreen} ${isGameFinished ? styles.finishedGame : styles.openGame}`}>
+            <div className={`${styles.gameScreen} ${isGameFinished ? styles.finishedGame :
+                    isGameInProgress ? styles.inProgressGame :
+                        styles.openGame
+                }`}>
                 <div className={styles.gameId}>#{gameDetails.id}</div>
                 <div className={styles.gameInfo}>
                     {isEditingGameName ? (
